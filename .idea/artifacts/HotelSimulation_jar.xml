@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="HotelSimulation:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/HotelSimulation_jar</output-path>
+    <root id="archive" name="HotelSimulation.jar">
+      <element id="module-output" name="HotelSimulation" />
+    </root>
+  </artifact>
+</component>

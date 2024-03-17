@@ -4,11 +4,7 @@ import java.util.ArrayList;
 public class Hotel {
     private String name;
     private final List<Room> rooms = new ArrayList<>();
-    private List<Employee> employees;
-    private List<Guest> guests;
-//    private FinancialManager financialManager;
-//    private MarketingManager marketingManager;
-//    private CompetitorManager competitorManager;
+    private final List<Employee> employees = new ArrayList<>();
 
     void setName(String name) {
         this.name = name;
@@ -22,13 +18,12 @@ public class Hotel {
         this.rooms.add(room);
     }
 
-    public String getRooms() {
-//        return this.rooms.toString();
+    public void printRooms() {
         String s = "";
         for(Room item: this.rooms) {
             s = s + item + "\n";
         }
 
-        return s;
+        System.out.println("\nROOMS:\n" + s);
     }
 }

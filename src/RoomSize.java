@@ -4,4 +4,3 @@ public enum RoomSize {
     TRIPLE,
     QUADRUPLE
 }
-

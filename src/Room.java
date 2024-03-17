@@ -14,7 +14,7 @@ public class Room {
 
     @Override
     public String toString() {
-        return "Room " + this.number + " | " + this.size + " | " + this.type + " | " + this.area + " m² | " + maxHotelStars(this.type, this.size, this.area);
+        return "Room " + this.number + " | " + this.size + " | " + this.type + " | " + this.area + " m² | " + maxHotelStars(this.type, this.size, this.area) + " *";
     }
 
     public static RoomType stringToRoomType(String string) {
