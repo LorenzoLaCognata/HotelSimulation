@@ -1,13 +1,13 @@
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-import java.util.Scanner;
+import java.time.LocalDate;
+import java.util.*;
 
 public class GameManager {
-    private Hotel hotel = new Hotel();
-    private List<Guest> guests = new ArrayList<>();
+    private final Hotel hotel = new Hotel();
+    private final List<Guest> guests = new ArrayList<>();
 
     private final Random rand = new Random();
+    private static LocalDate gameDate = LocalDate.now();
+    private static final Double reservationRate = 0.15;
 
     public GameManager() {
             System.out.println("\nWelcome to Hotel Simulation!\n");
@@ -36,7 +36,7 @@ public class GameManager {
 
         int availableArea = 200;
         int roomNumber = 1;
-        RoomSize inputSize;
+        RoomSize inputSize = RoomSize.SINGLE;
         RoomType inputType;
         int area;
 
@@ -44,7 +44,20 @@ public class GameManager {
 
             /* Room Size */
 
-            inputSize = RoomSize.TRIPLE;
+            Double roomRandom = rand.nextDouble();
+
+            if (roomRandom < 0.25) {
+                inputSize = RoomSize.SINGLE;
+            }
+            else if (roomRandom >= 0.25 && roomRandom < 0.65) {
+                inputSize = RoomSize.DOUBLE;
+            }
+            else if (roomRandom >= 0.65 && roomRandom < 0.90) {
+                inputSize = RoomSize.TRIPLE;
+            }
+            else if (roomRandom >= 0.9) {
+                inputSize = RoomSize.QUADRUPLE;
+            }
 
             if (hotelSetupMode == SetupMode.MANUAL) {
                 System.out.println("You have " + availableArea + " square meters available for your rooms");
@@ -163,7 +176,42 @@ public class GameManager {
         }
 
         this.printGuests();
-        System.out.println("\nGoodbye!");
+    }
+
+    public void reserveRoom(Room room, Guest guest, LocalDate startDate, LocalDate endDate) {
+        this.hotel.addReservation(new Reservation(room, guest, startDate, endDate));
+    }
+
+    public void printReservations() {
+        String s = "";
+        for(Reservation item: this.hotel.getReservations()) {
+            s = s + item + "\n";
+        }
+
+        System.out.println("RESERVATIONS:\n" + s);
+    }
+
+    public void generateReservations() {
+
+        for(Guest guest: this.guests) {
+            if (rand.nextDouble() <= reservationRate && !guest.isAccomodated()) {
+                boolean roomFound = false;
+                for(Room room: this.hotel.getRooms()) {
+                    if (!roomFound && !room.isOccupied() && room.getSizeNumber() == guest.getPeople()) {
+                        roomFound = true;
+                        reserveRoom(room, guest, gameDate, gameDate.plusDays(1));
+                    }
+                }
+            }
+        }
+
+        printReservations();
+    }
+
+    public void advanceDate() {
+        gameDate = gameDate.plusDays(1);
+        System.out.println("GAME DATE | " + gameDate + "\n");
+        this.generateReservations();
     }
 
 }

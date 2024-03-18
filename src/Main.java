@@ -6,5 +6,7 @@ public class Main {
         gameManager.initHotel();
         gameManager.initGuests();
 
+        gameManager.advanceDate();
+        gameManager.advanceDate();
     }
 }

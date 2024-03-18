@@ -1,4 +1,5 @@
 public class Room {
+
     private final int number;
     private final RoomSize size;
     private final RoomType type;
@@ -14,7 +15,37 @@ public class Room {
 
     @Override
     public String toString() {
-        return "Room " + this.number + " | " + this.size + " | " + this.type + " | " + this.area + " m² | " + maxHotelStars(this.type, this.size, this.area) + " *";
+        return "Room " + this.number + " | " + this.size + " | " + this.type + " | " + this.area + " m² | " + maxHotelStars(this.type, this.size, this.area) + " * | Occupied " + this.occupied;
+    }
+
+    public int getNumber() {
+        return number;
+    }
+
+    public boolean isOccupied() {
+        return occupied;
+    }
+
+    public void setOccupied(boolean occupied) {
+        this.occupied = occupied;
+    }
+
+    public int getSizeNumber() {
+        if (this.size == RoomSize.SINGLE) {
+            return 1;
+        }
+        else if (this.size == RoomSize.DOUBLE) {
+            return 2;
+        }
+        else if (this.size == RoomSize.TRIPLE) {
+            return 3;
+        }
+        else if (this.size == RoomSize.QUADRUPLE) {
+            return 4;
+        }
+        else {
+            return 0;
+        }
     }
 
     public static RoomType stringToRoomType(String string) {
