@@ -1,10 +1,13 @@
-public class Room {
+import Enum.*;
 
+public class Room {
     private final int number;
     private final RoomSize size;
     private final RoomType type;
     private final int area;
     private boolean occupied = false;
+
+    // Constructor
 
     public Room(int number, RoomSize roomSize, RoomType roomType, int area) {
         this.number = number;
@@ -13,22 +16,43 @@ public class Room {
         this.area = area;
     }
 
-    @Override
-    public String toString() {
-        return "Room " + this.number + " | " + this.size + " | " + this.type + " | " + this.area + " m² | " + maxHotelStars(this.type, this.size, this.area) + " * | Occupied " + this.occupied;
-    }
+    // Getter
 
     public int getNumber() {
         return number;
+    }
+
+    public RoomSize getSize() {
+        return size;
+    }
+
+    public RoomType getType() {
+        return type;
+    }
+
+    public int getArea() {
+        return area;
     }
 
     public boolean isOccupied() {
         return occupied;
     }
 
+    // Setter
+
     public void setOccupied(boolean occupied) {
         this.occupied = occupied;
     }
+
+
+    // Override
+
+    @Override
+    public String toString() {
+        return "Room " + this.number + " | " + this.size + " | " + this.type + " | " + this.area + " m² | " + maxHotelStars(this.type, this.size, this.area) + " *";
+    }
+
+    // Methods
 
     public int getSizeNumber() {
         if (this.size == RoomSize.SINGLE) {

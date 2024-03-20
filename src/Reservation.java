@@ -1,10 +1,14 @@
 import java.time.LocalDate;
+import Enum.*;
 
 public class Reservation {
     private final Room room;
     private final Guest guest;
     private final LocalDate startDate;
     private final LocalDate endDate;
+    private ReservationStatus status = ReservationStatus.CONFIRMED;
+
+    // Constructor
 
     public Reservation(Room room, Guest guest, LocalDate startDate, LocalDate endDate) {
         this.room = room;
@@ -13,10 +17,7 @@ public class Reservation {
         this.endDate = endDate;
     }
 
-    @Override
-    public String toString() {
-        return "Reservation | From " + this.startDate + " | To " + this.endDate + " | GUEST " + this.guest + " | ROOM " + this.room;
-    }
+    // Getter
 
     public Room getRoom() {
         return room;
@@ -24,6 +25,31 @@ public class Reservation {
 
     public Guest getGuest() {
         return guest;
+    }
+
+    public ReservationStatus getStatus() {
+        return status;
+    }
+
+    public LocalDate getStartDate() {
+        return startDate;
+    }
+
+    public LocalDate getEndDate() {
+        return endDate;
+    }
+
+    // Setter
+
+    public void setStatus(ReservationStatus status) {
+        this.status = status;
+    }
+
+    // Override
+
+    @Override
+    public String toString() {
+        return "Reservation | From " + this.startDate + " | To " + this.endDate + " | GUEST " + this.guest + " | ROOM " + this.room;
     }
 
 }

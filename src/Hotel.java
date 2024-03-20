@@ -7,22 +7,22 @@ public class Hotel {
     private final List<Employee> employees = new ArrayList<>();
     private final List<Reservation> reservations = new ArrayList<>();
 
-    void setName(String name) {
-        this.name = name;
+    // Constructor
+
+    public Hotel() {
     }
+
+    // Getter
 
     public String getName() {
         return name;
     }
 
-    public void addRoom(Room room) {
-        this.rooms.add(room);
-    }
-
     public List<Room> getRooms() {
         return rooms;
     }
-    public Room getRoom(int number) {
+
+    public Room getRoomByNumber(int number) {
         for(Room room : this.rooms) {
             if(room.getNumber() == number) {
                 return room;
@@ -31,6 +31,22 @@ public class Hotel {
         return null;
     }
 
+    public List<Reservation> getReservations() {
+        return this.reservations;
+    }
+
+    // Setter
+
+    void setName(String name) {
+        this.name = name;
+    }
+
+    public void addRoom(Room room) {
+        this.rooms.add(room);
+    }
+
+    // Printer
+
     public void printRooms() {
         String s = "";
         for(Room item: this.rooms) {
@@ -38,16 +54,6 @@ public class Hotel {
         }
 
         System.out.println("\nROOMS:\n" + s);
-    }
-
-    public List<Reservation> getReservations() {
-        return this.reservations;
-    }
-
-    public void addReservation(Reservation reservation) {
-        this.reservations.add(reservation);
-        reservation.getRoom().setOccupied(true);
-        reservation.getGuest().setAccomodated(true);
     }
 
 }

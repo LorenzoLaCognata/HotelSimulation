@@ -1,3 +1,5 @@
+package Enum;
+
 public enum EmployeeRole {
     HOTEL_GENERAL_MANAGER,
     ASSISTANT_GENERAL_MANAGER,

@@ -1,5 +1,25 @@
+import Enum.*;
+
 public class Employee {
-    private String name;
-    private EmployeeRole role;
+    private final String name;
+    private final EmployeeRole role;
+
+    // Constructor
+
+    public Employee(String name, EmployeeRole role) {
+        this.name = name;
+        this.role = role;
+    }
+
+    // Getter
+
+    public String getName() {
+        return name;
+    }
+
+    public EmployeeRole getRole() {
+        return role;
+    }
+
 }
 

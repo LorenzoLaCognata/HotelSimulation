@@ -1,15 +1,39 @@
 public class Guest {
     private final int number;
     private final int people;
-    private boolean accomodated;
+    private boolean accommodated = false;
 
     private static int guestCounter = 1;
+
+    // Constructor
 
     public Guest(int people) {
         this.number = guestCounter;
         this.people = people;
         guestCounter = guestCounter + 1;
     }
+
+    // Getter
+
+    public int getNumber() {
+        return number;
+    }
+
+    public int getPeople() {
+        return people;
+    }
+
+    public boolean isAccommodated() {
+        return accommodated;
+    }
+
+    // Setter
+
+    public void setAccommodated(boolean accommodated) {
+        this.accommodated = accommodated;
+    }
+
+    // Override
 
     @Override
     public String toString() {
@@ -20,19 +44,7 @@ public class Guest {
         else {
             people = "people";
         }
-        return "Guest " + this.number + " | "  + this.people + " " + people + " | Accomodated " + this.accomodated;
-    }
-
-    public boolean isAccomodated() {
-        return accomodated;
-    }
-
-    public void setAccomodated(boolean accomodated) {
-        this.accomodated = accomodated;
-    }
-
-    public int getPeople() {
-        return people;
+        return "Guest " + this.number + " | "  + this.people + " " + people;
     }
 
 }
