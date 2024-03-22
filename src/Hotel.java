@@ -1,5 +1,6 @@
 import java.util.List;
 import java.util.ArrayList;
+import Enum.ReservationStatus;
 
 public class Hotel {
     private String name;
@@ -20,6 +21,10 @@ public class Hotel {
 
     public List<Room> getRooms() {
         return rooms;
+    }
+
+    public List<Employee> getEmployees() {
+        return employees;
     }
 
     public Room getRoomByNumber(int number) {
@@ -50,10 +55,31 @@ public class Hotel {
     public void printRooms() {
         String s = "";
         for(Room item: this.rooms) {
-            s = s + item + "\n";
+            s = s + "\t" + item + "\n";
         }
 
         System.out.println("\nROOMS:\n" + s);
     }
+
+    public void printEmployees() {
+        String s = "";
+        for(Employee item: getEmployees()) {
+            s = s + "\t" + item + "\n";
+        }
+
+        System.out.println("EMPLOYEES:\n" + s);
+    }
+
+    public void printReservations() {
+        String s = "";
+        for(Reservation item: getReservations()) {
+            if (item.getStatus() != ReservationStatus.CHECKED_OUT){
+                s = s + "\t" + item + "\n";
+            }
+        }
+
+        System.out.println("RESERVATIONS:\n" + s);
+    }
+
 
 }

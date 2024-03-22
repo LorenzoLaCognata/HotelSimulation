@@ -5,3 +5,4 @@ public enum ReservationStatus {
     CHECKED_IN,
     CHECKED_OUT
 }
+

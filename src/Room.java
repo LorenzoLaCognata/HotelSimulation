@@ -1,11 +1,14 @@
-import Enum.*;
+import Enum.RoomSize;
+import Enum.RoomType;
+import Enum.RoomStatus;
+import Enum.HotelStars;
 
 public class Room {
     private final int number;
     private final RoomSize size;
     private final RoomType type;
     private final int area;
-    private boolean occupied = false;
+    private RoomStatus status = RoomStatus.FREE;
 
     // Constructor
 
@@ -34,14 +37,14 @@ public class Room {
         return area;
     }
 
-    public boolean isOccupied() {
-        return occupied;
+    public RoomStatus getStatus() {
+        return status;
     }
 
     // Setter
 
-    public void setOccupied(boolean occupied) {
-        this.occupied = occupied;
+    public void setStatus(RoomStatus status) {
+        this.status = status;
     }
 
 
@@ -49,7 +52,7 @@ public class Room {
 
     @Override
     public String toString() {
-        return "Room " + this.number + " | " + this.size + " | " + this.type + " | " + this.area + " m² | " + maxHotelStars(this.type, this.size, this.area) + " *";
+        return "Room " + this.number + " | " + this.size + " | " + this.type + " | " + this.area + " m² | " + maxHotelStars(this.type, this.size, this.area) + " * | " + this.status;
     }
 
     // Methods

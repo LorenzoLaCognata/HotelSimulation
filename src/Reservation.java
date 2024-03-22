@@ -1,5 +1,5 @@
 import java.time.LocalDate;
-import Enum.*;
+import Enum.ReservationStatus;
 
 public class Reservation {
     private final Room room;

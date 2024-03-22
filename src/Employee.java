@@ -1,4 +1,4 @@
-import Enum.*;
+import Enum.EmployeeRole;
 
 public class Employee {
     private final String name;
@@ -19,6 +19,13 @@ public class Employee {
 
     public EmployeeRole getRole() {
         return role;
+    }
+
+    // Override
+
+    @Override
+    public String toString() {
+        return "Employee " + this.name + " | " + this.role;
     }
 
 }

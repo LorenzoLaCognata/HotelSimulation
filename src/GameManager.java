@@ -1,9 +1,6 @@
-import java.text.DateFormat;
 import java.time.LocalDate;
 import java.util.*;
 import Enum.*;
-
-import javax.swing.text.DateFormatter;
 
 public class GameManager {
     private final Hotel hotel = new Hotel();
@@ -182,36 +179,52 @@ public class GameManager {
 
     public void advanceDate() {
         setGameDate(gameDate.plusDays(1));
-        System.out.println("\nGAME DATE | " + gameDate);
+        System.out.println("GAME DATE | " + gameDate + "\n");
+        this.generateGuests();
         this.generateReservations();
         this.generateCheckins();
         this.generateCheckouts();
+        this.hotel.printRooms();
     }
 
     // Methods / Guest
 
-    public void initGuests() {
+    public void generateGuests() {
 
         for (int i=0; i<10; i++) {
 
-            double gaussian = rand.nextGaussian();
+            if (rand.nextDouble() <= reservationRate) {
+                double gaussian = rand.nextGaussian();
 
-            while (gaussian < -1.0 || gaussian > 1.0) {
-                gaussian = rand.nextGaussian();
+                while (gaussian < -1.0 || gaussian > 1.0) {
+                    gaussian = rand.nextGaussian();
+                }
+
+                int people = 1 + (int) Math.round((gaussian + 1.0) * 1.5);
+                int nights = rand.nextInt(1,7);
+                this.guests.add(new Guest(people, nights));
             }
-
-            int size = 1 + (int) Math.round((gaussian + 1.0) * 1.5);
-            this.guests.add(new Guest(size));
         }
 
         this.printGuests();
     }
 
+    public void printGuests() {
+        String s = "";
+        for(Guest item: this.guests) {
+            if (item.getStatus() == GuestStatus.WAITING || item.getStatus() == GuestStatus.STAYING) {
+                s = s + "\t" + item + "\n";
+            }
+        }
+
+        System.out.println("GUESTS:\n" + s);
+    }
+
     // Methods / Reservation
 
     public void reserveRoom(Room room, Guest guest, LocalDate startDate, LocalDate endDate) {
-        room.setOccupied(true);
-        guest.setAccommodated(true);
+        room.setStatus(RoomStatus.RESERVED);
+        guest.setStatus(GuestStatus.STAYING);
         Reservation reservation = new Reservation(room, guest, startDate, endDate);
         this.hotel.getReservations().add(reservation);
     }
@@ -219,33 +232,40 @@ public class GameManager {
     public void generateReservations() {
 
         for(Guest guest: this.guests) {
-            if (rand.nextDouble() <= reservationRate && !guest.isAccommodated()) {
+
+            if (guest.getStatus() == GuestStatus.WAITING) {
+
                 boolean roomFound = false;
-                for(Room room: this.hotel.getRooms()) {
-                    if (!roomFound && !room.isOccupied() && room.getSizeNumber() == guest.getPeople()) {
-                        roomFound = true;
-                        reserveRoom(room, guest, gameDate, gameDate.plusDays(1));
+                for (int size = guest.getPeople(); size <= 4; size++) {
+                    for (Room room : this.hotel.getRooms()) {
+                        if (!roomFound && room.getStatus() == RoomStatus.FREE && room.getSizeNumber() == size) {
+                            roomFound = true;
+                            reserveRoom(room, guest, gameDate, gameDate.plusDays(guest.getNights()));
+                        }
                     }
                 }
             }
         }
 
-        printReservations();
+        this.hotel.printReservations();
+
     }
 
     public void checkinGuest(Reservation reservation) {
         reservation.setStatus(ReservationStatus.CHECKED_IN);
-        System.out.println("Guest " + reservation.getGuest() + " checked in to Room " + reservation.getRoom());
+        System.out.println("\tGuest " + reservation.getGuest() + " checked in to Room " + reservation.getRoom());
     }
 
     public void checkoutGuest(Reservation reservation) {
-        reservation.getRoom().setOccupied(false);
-        reservation.getGuest().setAccommodated((false));
+        reservation.getRoom().setStatus(RoomStatus.FREE);
+        reservation.getGuest().setStatus((GuestStatus.STAYED));
         reservation.setStatus(ReservationStatus.CHECKED_OUT);
-        System.out.println("Guest " + reservation.getGuest() + " checked out from Room " + reservation.getRoom());
+        System.out.println("\tGuest " + reservation.getGuest() + " checked out from Room " + reservation.getRoom());
     }
 
     public void generateCheckins() {
+
+        System.out.println("CHECK INS:");
 
         for(Reservation reservation: this.hotel.getReservations()) {
             if (reservation.getStatus() == ReservationStatus.CONFIRMED && reservation.getStartDate().isEqual(getGameDate())) {
@@ -253,9 +273,13 @@ public class GameManager {
             }
         }
 
+        System.out.println();
+
     }
 
     public void generateCheckouts() {
+
+        System.out.println("CHECK OUTS:");
 
         for(Reservation reservation: this.hotel.getReservations()) {
             if (reservation.getStatus() == ReservationStatus.CHECKED_IN && reservation.getEndDate().isEqual(getGameDate())) {
@@ -263,26 +287,16 @@ public class GameManager {
             }
         }
 
+        System.out.println();
     }
 
-    // Printer
+    // Methods / Employee
 
-    public void printGuests() {
-        String s = "";
-        for(Guest item: this.guests) {
-            s = s + item + "\n";
-        }
+    public void initEmployees() {
 
-        System.out.println("GUESTS:\n" + s);
-    }
+        this.hotel.getEmployees().add(new Employee("John Doe", EmployeeRole.ASSISTANT_GENERAL_MANAGER));
 
-    public void printReservations() {
-        String s = "";
-        for(Reservation item: this.hotel.getReservations()) {
-            s = s + item + "\n";
-        }
-
-        System.out.println("\nRESERVATIONS:\n" + s);
+        this.hotel.printEmployees();
     }
 
 }
