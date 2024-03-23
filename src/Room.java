@@ -3,12 +3,27 @@ import Enum.RoomType;
 import Enum.RoomStatus;
 import Enum.HotelStars;
 
+import java.util.ArrayList;
+
 public class Room {
     private final int number;
     private final RoomSize size;
     private final RoomType type;
     private final int area;
     private RoomStatus status = RoomStatus.FREE;
+
+    public static ArrayList<RoomStatus> freeStatus = new ArrayList<RoomStatus>() {
+        {
+            add(RoomStatus.FREE);
+        }
+    };
+
+    public static ArrayList<RoomStatus> allStatus = new ArrayList<RoomStatus>() {
+        {
+            add(RoomStatus.FREE);
+            add(RoomStatus.RESERVED);
+        }
+    };
 
     // Constructor
 
@@ -105,14 +120,6 @@ public class Room {
             case "FIVE" -> HotelStars.FIVE;
             default -> null;
         };
-    }
-
-    public static Integer parseArea(String string) {
-        try {
-            return Integer.parseInt(string);
-        } catch (NumberFormatException e) {
-            return -1;
-        }
     }
 
     public static int minArea(RoomType roomType, RoomSize roomSize, HotelStars hotelStars) {

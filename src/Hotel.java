@@ -1,6 +1,7 @@
 import java.util.List;
 import java.util.ArrayList;
 import Enum.ReservationStatus;
+import Enum.RoomStatus;
 
 public class Hotel {
     private String name;
@@ -52,13 +53,33 @@ public class Hotel {
 
     // Printer
 
-    public void printRooms() {
-        String s = "";
+    public ArrayList<Room> subsetRooms(int size, ArrayList<RoomStatus> status) {
+
+        ArrayList<Room> rooms = new ArrayList<Room>();
+
         for(Room item: this.rooms) {
+            if (item.getSizeNumber() >= size) {
+                if (status.isEmpty() || status.contains(item.getStatus())) {
+                    rooms.add(item);
+                }
+            }
+        }
+
+        return rooms;
+
+    }
+
+    public void printRooms(ArrayList<Room> rooms, boolean header) {
+        String s = "";
+        for(Room item: rooms) {
             s = s + "\t" + item + "\n";
         }
 
-        System.out.println("\nROOMS:\n" + s);
+        if (header) {
+            System.out.println("\nROOMS:");
+        }
+
+        System.out.println(s);
     }
 
     public void printEmployees() {

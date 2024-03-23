@@ -6,7 +6,7 @@ public class Main {
         gameManager.initHotel();
         gameManager.initEmployees();
 
-        for (int i=0; i<21; i++) {
+        for (int i=0; i<2; i++) {
             gameManager.advanceDate();
         }
     }

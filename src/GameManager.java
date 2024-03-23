@@ -9,6 +9,8 @@ public class GameManager {
     private static final Random rand = new Random();
     private static LocalDate gameDate = LocalDate.now();
     private static final Double reservationRate = 0.15;
+    private static SetupMode hotelSetupMode = SetupMode.AUTOMATIC;
+    private static final Scanner scanner = new Scanner(System.in);
 
     // Constructor
 
@@ -40,21 +42,18 @@ public class GameManager {
 
     public void initHotel() {
 
-        Scanner myObj = new Scanner(System.in);
-
         System.out.println("Hotel Setup: do you want to insert your input (A) or setup the hotel automatically? (B)");
 
-        SetupMode hotelSetupMode = SetupMode.AUTOMATIC;
-//        if (myObj.nextLine().equalsIgnoreCase("A")) {
-//            hotelSetupMode = SetupMode.MANUAL;
-//        }
+        if (scanner.nextLine().equalsIgnoreCase("A")) {
+            hotelSetupMode = SetupMode.MANUAL;
+        }
 
         /* Hotel Name */
 
         String hotelName = "My Hotel";
         if (hotelSetupMode == SetupMode.MANUAL) {
             System.out.println("Choose the name of your hotel");
-            hotelName = myObj.nextLine();
+            hotelName = scanner.nextLine();
         }
         this.hotel.setName(hotelName);
         System.out.println("\nHOTEL | " + this.hotel.getName());
@@ -92,7 +91,7 @@ public class GameManager {
 
                 while (!correctSize) {
                     System.out.println("Choose the size for this room (SINGLE, DOUBLE, TRIPLE or QUADRUPLE)");
-                    String inputSizeString = myObj.nextLine();
+                    String inputSizeString = scanner.nextLine();
                     inputSize = Room.stringToRoomSize(inputSizeString);
 
                     if (inputSize == null) {
@@ -116,7 +115,7 @@ public class GameManager {
 
                 while (!correctType) {
                     System.out.println("Choose the type for this room (STANDARD, SUPERIOR, DELUXE, JUNIOR_SUITE or SUITE)");
-                    String inputTypeString = myObj.nextLine();
+                    String inputTypeString = scanner.nextLine();
                     inputType = Room.stringToRoomType(inputTypeString);
 
                     if (inputType == null) {
@@ -146,7 +145,7 @@ public class GameManager {
                     int area4 = Room.minArea(inputType, inputSize, HotelStars.FOUR);
                     int area5 = Room.minArea(inputType, inputSize, HotelStars.FIVE);
                     System.out.println(area1 + " m²: * | " + area2 + " m²: ** | " + area3 + " m²: *** | " + area4 + " m²: **** | " + area5 + " m²: *****");
-                    area = Room.parseArea(myObj.nextLine());
+                    area = parseNumber(scanner.nextLine());
 
                     if (area <= 0) {
                         System.out.println("You have not chosen an area correctly, please enter a positive number.");
@@ -173,7 +172,8 @@ public class GameManager {
             System.out.println("All the square meters available were allocated to the rooms.");
         }
 
-        this.hotel.printRooms();
+        ArrayList<Room> rooms = this.hotel.subsetRooms(0, Room.allStatus);
+        this.hotel.printRooms(rooms, true);
 
     }
 
@@ -184,14 +184,23 @@ public class GameManager {
         this.generateReservations();
         this.generateCheckins();
         this.generateCheckouts();
-        this.hotel.printRooms();
+        ArrayList<Room> rooms = this.hotel.subsetRooms(0, Room.allStatus);
+        this.hotel.printRooms(rooms, true);
+    }
+
+    public static Integer parseNumber(String string) {
+        try {
+            return Integer.parseInt(string);
+        } catch (NumberFormatException e) {
+            return -1;
+        }
     }
 
     // Methods / Guest
 
     public void generateGuests() {
 
-        for (int i=0; i<10; i++) {
+        for (int i = 0; i < 10; i++) {
 
             if (rand.nextDouble() <= reservationRate) {
                 double gaussian = rand.nextGaussian();
@@ -201,12 +210,15 @@ public class GameManager {
                 }
 
                 int people = 1 + (int) Math.round((gaussian + 1.0) * 1.5);
-                int nights = rand.nextInt(1,7);
+                int nights = rand.nextInt(1, 7);
                 this.guests.add(new Guest(people, nights));
             }
         }
 
-        this.printGuests();
+        if (hotelSetupMode == SetupMode.AUTOMATIC) {
+            this.printGuests();
+        }
+
     }
 
     public void printGuests() {
@@ -231,16 +243,48 @@ public class GameManager {
 
     public void generateReservations() {
 
+        if (hotelSetupMode == SetupMode.MANUAL) {
+            System.out.println("GUESTS:");
+        }
+
         for(Guest guest: this.guests) {
 
             if (guest.getStatus() == GuestStatus.WAITING) {
 
-                boolean roomFound = false;
-                for (int size = guest.getPeople(); size <= 4; size++) {
-                    for (Room room : this.hotel.getRooms()) {
-                        if (!roomFound && room.getStatus() == RoomStatus.FREE && room.getSizeNumber() == size) {
-                            roomFound = true;
-                            reserveRoom(room, guest, gameDate, gameDate.plusDays(guest.getNights()));
+                if (hotelSetupMode == SetupMode.MANUAL) {
+
+                    System.out.println("\t" + guest);
+
+                    ArrayList<Room> rooms = this.hotel.subsetRooms(guest.getPeople(), Room.freeStatus);
+
+                    if (rooms.isEmpty()) {
+                        System.out.println("\tThere are no available rooms\n");
+                    }
+
+                    else {
+                        System.out.println("\n\tAvailable Rooms:");
+                        this.hotel.printRooms(rooms, false);
+                        System.out.println("\tChoose Room number to assign to this guest:");
+                        int roomNumber = parseNumber(scanner.nextLine());
+
+                        boolean roomFound = false;
+                        for (Room room : this.hotel.getRooms()) {
+                            if (!roomFound && room.getStatus() == RoomStatus.FREE && room.getNumber() == roomNumber) {
+                                roomFound = true;
+                                reserveRoom(room, guest, gameDate, gameDate.plusDays(guest.getNights()));
+                            }
+                        }
+                    }
+                }
+
+                else {
+                    boolean roomFound = false;
+                    for (int size = guest.getPeople(); size <= 4; size++) {
+                        for (Room room : this.hotel.getRooms()) {
+                            if (!roomFound && room.getStatus() == RoomStatus.FREE && room.getSizeNumber() == size) {
+                                roomFound = true;
+                                reserveRoom(room, guest, gameDate, gameDate.plusDays(guest.getNights()));
+                            }
                         }
                     }
                 }
