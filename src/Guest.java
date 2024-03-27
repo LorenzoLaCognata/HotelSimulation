@@ -1,19 +1,26 @@
 import Enum.GuestStatus;
 
+import java.time.Duration;
+import java.time.LocalDate;
+import java.time.Period;
+import java.time.temporal.ChronoUnit;
+
 public class Guest {
     private final int number;
     private final int people;
-    private final int nights;
+    private final LocalDate startDate;
+    private final LocalDate endDate;
     private GuestStatus status = GuestStatus.WAITING;
 
     private static int guestCounter = 1;
 
     // Constructor
 
-    public Guest(int people, int nights) {
+    public Guest(int people, LocalDate startDate, LocalDate endDate) {
         this.number = guestCounter;
         this.people = people;
-        this.nights = nights;
+        this.startDate = startDate;
+        this.endDate = endDate;
         guestCounter = guestCounter + 1;
     }
 
@@ -27,8 +34,16 @@ public class Guest {
         return people;
     }
 
+    public LocalDate getStartDate() {
+        return startDate;
+    }
+
+    public LocalDate getEndDate() {
+        return endDate;
+    }
+
     public int getNights() {
-        return nights;
+        return (int) ChronoUnit.DAYS.between(getStartDate(), getEndDate());
     }
 
     public GuestStatus getStatus() {
@@ -54,15 +69,7 @@ public class Guest {
             peopleString = "people";
         }
 
-        String nightString;
-        if (this.nights == 1) {
-            nightString = "night";
-        }
-        else {
-            nightString = "nights";
-        }
-
-        return "Guest " + this.number + " | "  + this.people + " " + peopleString + " | " + this.nights + " " + nightString + " | " + this.status;
+        return "Guest " + this.number + " | "  + this.people + " " + peopleString + " | From " + this.startDate + " | To " + this.endDate + " | " + this.status;
     }
 
 }

@@ -69,38 +69,46 @@ public class Hotel {
 
     }
 
-    public void printRooms(ArrayList<Room> rooms, boolean header) {
+    public String roomsString(List<Room> rooms) {
+
         String s = "";
+
         for(Room item: rooms) {
             s = s + "\t" + item + "\n";
         }
 
-        if (header) {
-            System.out.println("\nROOMS:");
-        }
+        return s;
 
-        System.out.println(s);
     }
 
-    public void printEmployees() {
+    public String employeesString() {
+
         String s = "";
+
         for(Employee item: getEmployees()) {
             s = s + "\t" + item + "\n";
         }
 
-        System.out.println("EMPLOYEES:\n" + s);
+        return s;
+
     }
 
-    public void printReservations() {
+    public String reservationsString() {
+
         String s = "";
+
         for(Reservation item: getReservations()) {
             if (item.getStatus() != ReservationStatus.CHECKED_OUT){
                 s = s + "\t" + item + "\n";
             }
         }
 
-        System.out.println("RESERVATIONS:\n" + s);
-    }
+        if (s.isEmpty()) {
+            s = s + "\t-\n";
+        }
 
+        return s;
+
+    }
 
 }

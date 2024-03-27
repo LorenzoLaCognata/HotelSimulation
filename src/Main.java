@@ -4,9 +4,8 @@ public class Main {
         GameManager gameManager = new GameManager();
 
         gameManager.initHotel();
-        gameManager.initEmployees();
 
-        for (int i=0; i<2; i++) {
+        for (int i=0; i<10; i++) {
             gameManager.advanceDate();
         }
     }

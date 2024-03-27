@@ -49,7 +49,7 @@ public class Reservation {
 
     @Override
     public String toString() {
-        return "Reservation | From " + this.startDate + " | To " + this.endDate + " | GUEST " + this.guest + " | ROOM " + this.room;
+        return "Reservation | From " + this.startDate + " | To " + this.endDate + " | GUEST (" + this.guest + ") | ROOM (" + this.room + ")";
     }
 
 }
