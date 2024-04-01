@@ -4,6 +4,7 @@ import Enum.RoomStatus;
 import Enum.HotelStars;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class Room {
     private final int number;
@@ -12,7 +13,7 @@ public class Room {
     private final int area;
     private RoomStatus status = RoomStatus.FREE;
 
-    public static ArrayList<RoomStatus> freeStatus = new ArrayList<RoomStatus>() {
+    public static final ArrayList<RoomStatus> freeStatus = new ArrayList<RoomStatus>() {
         {
             add(RoomStatus.FREE);
         }
@@ -183,6 +184,206 @@ public class Room {
                 };
             };
         };
+    }
+
+    public static List<String> allowedRoomSizes(RoomSize maxRoomSize) {
+
+        List<String> allowedRoomSizes = new ArrayList<>();
+        if (maxRoomSize == RoomSize.SINGLE || maxRoomSize == RoomSize.DOUBLE || maxRoomSize == RoomSize.TRIPLE || maxRoomSize == RoomSize.QUADRUPLE) {
+            allowedRoomSizes.add("SINGLE");
+        }
+        if (maxRoomSize == RoomSize.DOUBLE || maxRoomSize == RoomSize.TRIPLE || maxRoomSize == RoomSize.QUADRUPLE) {
+            allowedRoomSizes.add("DOUBLE");
+        }
+        if (maxRoomSize == RoomSize.TRIPLE || maxRoomSize == RoomSize.QUADRUPLE) {
+            allowedRoomSizes.add("TRIPLE");
+        }
+        if (maxRoomSize == RoomSize.QUADRUPLE) {
+            allowedRoomSizes.add("QUADRUPLE");
+        }
+        return allowedRoomSizes;
+
+    }
+
+    public static RoomType maxRoomType(RoomSize roomSize, HotelStars hotelStars) {
+
+        if (roomSize == RoomSize.SINGLE) {
+            return RoomType.DELUXE;
+        }
+        else {
+            return RoomType.SUITE;
+        }
+    }
+
+    public static List<String> allowedRoomTypes(RoomType maxRoomType) {
+
+        List<String> allowedRoomTypes = new ArrayList<>();
+        if (maxRoomType == RoomType.STANDARD || maxRoomType == RoomType.SUPERIOR || maxRoomType == RoomType.DELUXE || maxRoomType == RoomType.JUNIOR_SUITE || maxRoomType == RoomType.SUITE) {
+            allowedRoomTypes.add("STANDARD");
+        }
+        if (maxRoomType == RoomType.SUPERIOR || maxRoomType == RoomType.DELUXE || maxRoomType == RoomType.JUNIOR_SUITE || maxRoomType == RoomType.SUITE) {
+            allowedRoomTypes.add("SUPERIOR");
+        }
+        if (maxRoomType == RoomType.DELUXE || maxRoomType == RoomType.JUNIOR_SUITE || maxRoomType == RoomType.SUITE) {
+            allowedRoomTypes.add("DELUXE");
+        }
+        if (maxRoomType == RoomType.JUNIOR_SUITE || maxRoomType == RoomType.SUITE) {
+            allowedRoomTypes.add("JUNIOR_SUITE");
+        }
+        if (maxRoomType == RoomType.SUITE) {
+            allowedRoomTypes.add("SUITE");
+        }
+        return allowedRoomTypes;
+
+    }
+
+    public static RoomSize maxRoomSize(RoomType roomType, HotelStars hotelStars, int area) {
+
+        if (roomType == RoomType.STANDARD || roomType == RoomType.SUPERIOR || roomType == RoomType.DELUXE) {
+            if (hotelStars == HotelStars.ONE || hotelStars == HotelStars.TWO || hotelStars == HotelStars.THREE) {
+                if (area >= 29) {
+                    return RoomSize.QUADRUPLE;
+                }
+                else if (area >= 23) {
+                    return RoomSize.TRIPLE;
+                }
+                else if (area >= 17) {
+                    return RoomSize.DOUBLE;
+                }
+                else if (area >= 11) {
+                    return RoomSize.SINGLE;
+                }
+                else {
+                    return null;
+                }
+            }
+            else if (hotelStars == HotelStars.FOUR) {
+                if (area >= 31) {
+                    return RoomSize.QUADRUPLE;
+                }
+                else if (area >= 25) {
+                    return RoomSize.TRIPLE;
+                }
+                else if (area >= 15) {
+                    return RoomSize.DOUBLE;
+                }
+                else if (area >= 12) {
+                    return RoomSize.SINGLE;
+                }
+                else {
+                    return null;
+                }
+            }
+            else if (hotelStars == HotelStars.FIVE) {
+                if (area >= 35) {
+                    return RoomSize.QUADRUPLE;
+                }
+                else if (area >= 29) {
+                    return RoomSize.TRIPLE;
+                }
+                else if (area >= 17) {
+                    return RoomSize.DOUBLE;
+                }
+                else if (area >= 14) {
+                    return RoomSize.SINGLE;
+                }
+                else {
+                    return null;
+                }
+            }
+        }
+
+        else if (roomType == RoomType.JUNIOR_SUITE) {
+            if (hotelStars == HotelStars.ONE || hotelStars == HotelStars.TWO || hotelStars == HotelStars.THREE) {
+                if (area >= 33) {
+                    return RoomSize.QUADRUPLE;
+                }
+                else if (area >= 27) {
+                    return RoomSize.TRIPLE;
+                }
+                else if (area >= 21) {
+                    return RoomSize.DOUBLE;
+                }
+                else {
+                    return null;
+                }
+            }
+            else if (hotelStars == HotelStars.FOUR) {
+                if (area >= 36) {
+                    return RoomSize.QUADRUPLE;
+                }
+                else if (area >= 30) {
+                    return RoomSize.TRIPLE;
+                }
+                else if (area >= 24) {
+                    return RoomSize.DOUBLE;
+                }
+                else {
+                    return null;
+                }
+            }
+            else if (hotelStars == HotelStars.FIVE) {
+                if (area >= 37) {
+                    return RoomSize.QUADRUPLE;
+                }
+                else if (area >= 31) {
+                    return RoomSize.TRIPLE;
+                }
+                else if (area >= 25) {
+                    return RoomSize.DOUBLE;
+                }
+                else {
+                    return null;
+                }
+            }
+        }
+
+        else if (roomType == RoomType.SUITE) {
+            if (hotelStars == HotelStars.ONE || hotelStars == HotelStars.TWO || hotelStars == HotelStars.THREE) {
+                if (area >= 38) {
+                    return RoomSize.QUADRUPLE;
+                }
+                else if (area >= 32) {
+                    return RoomSize.TRIPLE;
+                }
+                else if (area >= 26) {
+                    return RoomSize.DOUBLE;
+                }
+                else {
+                    return null;
+                }
+            }
+            else if (hotelStars == HotelStars.FOUR) {
+                if (area >= 44) {
+                    return RoomSize.QUADRUPLE;
+                }
+                else if (area >= 38) {
+                    return RoomSize.TRIPLE;
+                }
+                else if (area >= 32) {
+                    return RoomSize.DOUBLE;
+                }
+                else {
+                    return null;
+                }
+            }
+            else if (hotelStars == HotelStars.FIVE) {
+                if (area >= 45) {
+                    return RoomSize.QUADRUPLE;
+                }
+                else if (area >= 39) {
+                    return RoomSize.TRIPLE;
+                }
+                else if (area >= 33) {
+                    return RoomSize.DOUBLE;
+                }
+                else {
+                    return null;
+                }
+            }
+        }
+
+        return null;
     }
 
     public static HotelStars maxHotelStars(RoomType roomType, RoomSize roomSize, int area) {

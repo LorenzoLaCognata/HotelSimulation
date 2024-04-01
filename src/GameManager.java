@@ -13,7 +13,6 @@ public class GameManager {
     private static LocalDate gameDate = LocalDate.now();
     private static final Double reservationRate = 0.15;
     private static SetupMode hotelSetupMode = SetupMode.AUTOMATIC;
-    private static final Scanner scanner = new Scanner(System.in);
 
     // Constructor
 
@@ -45,27 +44,29 @@ public class GameManager {
 
     public void initHotel() {
 
-        Log.print("Hotel Setup: do you want to insert your input (A) or setup the hotel automatically? (B)");
+        String hotelSetupString = Input.askQuestion("Hotel Setup: do you want to insert your input", List.of("MANUALLY", "AUTOMATICALLY"), InputType.SINGLE_CHOICE);
 
-        if (scanner.nextLine().equalsIgnoreCase("A")) {
+        if (hotelSetupString.equalsIgnoreCase("MANUALLY")) {
             hotelSetupMode = SetupMode.MANUAL;
         }
 
         /* Hotel Name */
 
         String hotelName = "My Hotel";
+
         if (hotelSetupMode == SetupMode.MANUAL) {
-            Log.print("Choose the name of your hotel");
-            hotelName = scanner.nextLine();
+            hotelName = Input.askQuestion("Choose the name of your hotel", InputType.STRING);
         }
+
         this.hotel.setName(hotelName);
         Log.print("\nHOTEL | " + this.hotel.getName() + "\n");
 
         int availableArea = 200;
         int roomNumber = 1;
+
         RoomSize inputSize = RoomSize.SINGLE;
-        RoomType inputType;
-        int area;
+        RoomType inputType = RoomType.STANDARD;
+        int area = 25;
 
         while (availableArea >= Room.minArea(RoomType.STANDARD, RoomSize.SINGLE, HotelStars.ONE)) {
 
@@ -87,57 +88,22 @@ public class GameManager {
             }
 
             if (hotelSetupMode == SetupMode.MANUAL) {
+
                 Log.print("You have " + availableArea + " square meters available for your rooms");
                 Log.print("Room " + roomNumber);
 
-                boolean correctSize = false;
+                List<String> questionOptions = Room.allowedRoomSizes(Room.maxRoomSize(RoomType.STANDARD, HotelStars.ONE, availableArea));
+                String answer = Input.askQuestion("Choose the size for this room", questionOptions, InputType.SINGLE_CHOICE);
+                inputSize = Room.stringToRoomSize(answer);
 
-                while (!correctSize) {
-                    Log.print("Choose the size for this room (SINGLE, DOUBLE, TRIPLE or QUADRUPLE)");
-                    String inputSizeString = scanner.nextLine();
-                    inputSize = Room.stringToRoomSize(inputSizeString);
+                /* Room Type */
 
-                    if (inputSize == null) {
-                        Log.print("You have not chosen a size correctly, please enter SINGLE, DOUBLE, TRIPLE or QUADRUPLE");
-                    }
-                    else if (availableArea < Room.minArea(RoomType.STANDARD, inputSize, HotelStars.ONE)) {
-                        Log.print("The minimum area for this room is higher than the square meters you have available for your rooms. Please choose another room size.");
-                    }
-                    else {
-                        correctSize = true;
-                    }
-                }
-            }
+                questionOptions = Room.allowedRoomTypes(Room.maxRoomType(inputSize, HotelStars.ONE));
+                answer = Input.askQuestion("Choose the type for this room", questionOptions, InputType.SINGLE_CHOICE);
+                inputType = Room.stringToRoomType(answer);
 
-            /* Room Type */
+                /* Room Area */
 
-            inputType = RoomType.STANDARD;
-
-            if (hotelSetupMode == SetupMode.MANUAL) {
-                boolean correctType = false;
-
-                while (!correctType) {
-                    Log.print("Choose the type for this room (STANDARD, SUPERIOR, DELUXE, JUNIOR_SUITE or SUITE)");
-                    String inputTypeString = scanner.nextLine();
-                    inputType = Room.stringToRoomType(inputTypeString);
-
-                    if (inputType == null) {
-                        Log.print("You have not chosen a type correctly, please enter STANDARD, SUPERIOR, DELUXE, JUNIOR_SUITE or SUITE");
-                    } else if (Room.minArea(inputType, inputSize, HotelStars.ONE) == -1) {
-                        Log.print("The room type selected is not compatible with the room size selected. Please choose another room type.");
-                    } else if (availableArea < Room.minArea(inputType, inputSize, HotelStars.ONE)) {
-                        Log.print("The minimum area for this room is higher than the square meters you have available for your rooms. Please choose another room type.");
-                    } else {
-                        correctType = true;
-                    }
-                }
-            }
-
-            /* Room Area */
-
-            area = 25;
-
-            if (hotelSetupMode == SetupMode.MANUAL) {
                 boolean correctArea = false;
 
                 while (!correctArea) {
@@ -148,7 +114,7 @@ public class GameManager {
                     int area4 = Room.minArea(inputType, inputSize, HotelStars.FOUR);
                     int area5 = Room.minArea(inputType, inputSize, HotelStars.FIVE);
                     Log.print(area1 + " m²: * | " + area2 + " m²: ** | " + area3 + " m²: *** | " + area4 + " m²: **** | " + area5 + " m²: *****");
-                    area = parseNumber(scanner.nextLine());
+                    area = parseNumber(Input.scanner.nextLine());
 
                     if (area <= 0) {
                         Log.print("You have not chosen an area correctly, please enter a positive number.");
@@ -193,7 +159,7 @@ public class GameManager {
         if (hotelSetupMode == SetupMode.MANUAL) {
             for (DayOfWeek item: List.of(DayOfWeek.MONDAY, DayOfWeek.TUESDAY, DayOfWeek.WEDNESDAY, DayOfWeek.THURSDAY, DayOfWeek.FRIDAY, DayOfWeek.SATURDAY, DayOfWeek.SUNDAY)) {
                 Log.print("Choose the shift for " + item + ", enter the start hour and hour with the format hh:mm-hh:mm");
-                String time = scanner.nextLine();
+                String time = Input.scanner.nextLine();
                 if (!time.isEmpty()) {
                     LocalTime start = LocalTime.parse(time.substring(0, 5), DateTimeFormatter.ofPattern("HH:mm", Locale.getDefault()));
                     LocalTime end = LocalTime.parse(time.substring(6, 11), DateTimeFormatter.ofPattern("HH:mm", Locale.getDefault()));
@@ -321,7 +287,7 @@ public class GameManager {
                         Log.print("\n\tAvailable Rooms:");
                         Log.print(this.hotel.roomsString(rooms));
                         Log.print("\tChoose Room number to assign to this guest:");
-                        int roomNumber = parseNumber(scanner.nextLine());
+                        int roomNumber = parseNumber(Input.scanner.nextLine());
 
                         boolean roomFound = false;
                         for (Room room : this.hotel.getRooms()) {
