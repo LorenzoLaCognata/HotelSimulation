@@ -1,3 +1,8 @@
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
+import java.text.NumberFormat;
+import java.util.Locale;
+
 public class Log {
 
     // Reset
@@ -72,6 +77,23 @@ public class Log {
     public static final String PURPLE_BACKGROUND_BRIGHT = "\033[0;105m"; // PURPLE
     public static final String CYAN_BACKGROUND_BRIGHT = "\033[0;106m";  // CYAN
     public static final String WHITE_BACKGROUND_BRIGHT = "\033[0;107m";   // WHITE
+
+    public static DecimalFormat currency = (DecimalFormat) NumberFormat.getCurrencyInstance(Locale.ITALY);
+
+
+    // Methods
+
+    public static void initLog() {
+
+        DecimalFormatSymbols formatSymbols = currency.getDecimalFormatSymbols();
+        formatSymbols.setGroupingSeparator(',');
+        formatSymbols.setDecimalSeparator('.');
+
+        currency.setDecimalFormatSymbols(formatSymbols);
+        currency.setMinimumFractionDigits(2);
+        currency.setMaximumFractionDigits(2);
+
+    }
 
     // Printer
 

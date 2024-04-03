@@ -3,11 +3,14 @@ public class Main {
 
         GameManager gameManager = new GameManager();
 
+        Log.initLog();
         gameManager.initHotel();
 
         for (int i=0; i<10; i++) {
             gameManager.advanceDate();
         }
+
+        gameManager.financialSummary();
 
     }
 }

@@ -3,6 +3,7 @@ import Enum.RoomType;
 import Enum.RoomStatus;
 import Enum.HotelStars;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,6 +12,7 @@ public class Room {
     private final RoomSize size;
     private final RoomType type;
     private final int area;
+    private BigDecimal rate;
     private RoomStatus status = RoomStatus.FREE;
 
     public static final ArrayList<RoomStatus> freeStatus = new ArrayList<RoomStatus>() {
@@ -28,11 +30,12 @@ public class Room {
 
     // Constructor
 
-    public Room(int number, RoomSize roomSize, RoomType roomType, int area) {
+    public Room(int number, RoomSize roomSize, RoomType roomType, int area, BigDecimal rate) {
         this.number = number;
         this.size = roomSize;
         this.type = roomType;
         this.area = area;
+        this.rate = rate;
     }
 
     // Getter
@@ -53,11 +56,19 @@ public class Room {
         return area;
     }
 
+    public BigDecimal getRate() {
+        return rate;
+    }
+
     public RoomStatus getStatus() {
         return status;
     }
 
     // Setter
+
+    public void setRate(BigDecimal rate) {
+        this.rate = rate;
+    }
 
     public void setStatus(RoomStatus status) {
         this.status = status;
@@ -68,7 +79,7 @@ public class Room {
 
     @Override
     public String toString() {
-        return "Room " + this.number + " | " + this.size + " | " + this.type + " | " + this.area + " m² | " + maxHotelStars(this.type, this.size, this.area) + " * | " + this.status;
+        return "Room " + this.number + " | " + this.size + " | " + this.type + " | " + this.area + " m² | " + Log.currency.format(this.rate) + " | " + maxHotelStars(this.type, this.size, this.area) + " * | " + this.status;
     }
 
     // Methods

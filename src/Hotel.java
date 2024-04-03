@@ -1,3 +1,4 @@
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.ArrayList;
 import Enum.ReservationStatus;
@@ -41,6 +42,16 @@ public class Hotel {
         return this.reservations;
     }
 
+    public BigDecimal getRevenues() {
+        BigDecimal revenues = new BigDecimal(0);
+
+        for (Reservation item: this.getReservations()) {
+            revenues = revenues.add(item.calculatePrice());
+        }
+
+        return revenues;
+    }
+
     // Setter
 
     void setName(String name) {
@@ -66,6 +77,18 @@ public class Hotel {
         }
 
         return rooms;
+
+    }
+
+    public ArrayList<String> subsetRoomOptions(int size, ArrayList<RoomStatus> status) {
+
+        ArrayList<String> roomOptions = new ArrayList<String>();
+
+        for(Room item: this.subsetRooms(size, status)) {
+            roomOptions.add(String.valueOf(item.getNumber()));
+        }
+
+        return roomOptions;
 
     }
 

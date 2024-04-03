@@ -3,15 +3,13 @@ import java.time.LocalTime;
 
 public class Shift {
     private final DayOfWeek day;
-    private final LocalTime startHour;
-    private final LocalTime endHour;
+    private final TimePeriod timePeriod;
 
     // Constructor
 
-    public Shift(DayOfWeek day, LocalTime startHour, LocalTime endHour) {
+    public Shift(DayOfWeek day, TimePeriod timePeriod) {
         this.day = day;
-        this.startHour = startHour;
-        this.endHour = endHour;
+        this.timePeriod = timePeriod;
     }
 
     // Getter
@@ -20,19 +18,23 @@ public class Shift {
         return day;
     }
 
-    public LocalTime getStartHour() {
-        return startHour;
+    public TimePeriod getTimePeriod() {
+        return timePeriod;
     }
 
-    public LocalTime getEndHour() {
-        return endHour;
+    public LocalTime getStartTime() {
+        return timePeriod.getStartTime();
+    }
+
+    public LocalTime getEndTime() {
+        return timePeriod.getEndTime();
     }
 
     // Override
 
     @Override
     public String toString() {
-        return "Shift | " + this.day + " | " + this.startHour + " to " + this.endHour;
+        return "Shift | " + this.day + " | " + this.timePeriod;
     }
 
 }

@@ -1,4 +1,8 @@
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.List;
+import java.util.Locale;
 import java.util.Scanner;
 import Enum.InputType;
 
@@ -11,7 +15,23 @@ public class Input {
         return String.valueOf(letter);
     }
 
-    private static String questionOptionsString(String question, List<String> options) {
+    public static Integer parseNumber(String string) {
+        try {
+            return Integer.parseInt(string);
+        } catch (NumberFormatException e) {
+            return -1;
+        }
+    }
+
+    public static LocalTime parseTime(String string) {
+        try {
+            return LocalTime.parse(string, DateTimeFormatter.ofPattern("HH:mm", Locale.getDefault()));
+        } catch (DateTimeParseException e) {
+            return null;
+        }
+    }
+
+    private static String questionOptionsString(String question, List<String> options, InputType inputType) {
 
         String questionOptions = question + ": ";
 
@@ -25,7 +45,12 @@ public class Input {
                 }
             }
 
-            questionOptions = questionOptions + options.get(i) + " (" + getLetter(i) + ")";
+            if (inputType == InputType.SINGLE_CHOICE_NUMBER) {
+                questionOptions = questionOptions + options.get(i);
+            }
+            else {
+                questionOptions = questionOptions + options.get(i) + " (" + getLetter(i) + ")";
+            }
         }
 
         return questionOptions;
@@ -42,18 +67,26 @@ public class Input {
         while (!validAnswer) {
 
             if (answerCounter > 0) {
-                Log.printc(Log.RED, "Error! Wrong answer selected!");
+                Log.printc(Log.RED, "Error! Answer not valid!");
             }
 
-            Log.print(questionOptionsString(question, options));
+            Log.print(questionOptionsString(question, options, inputType));
 
             inputString = scanner.nextLine();
             answerCounter++;
 
             for (int i = 0; i < options.size(); i++) {
-                if (inputString.equalsIgnoreCase(getLetter(i))) {
-                    validAnswer = true;
-                    answer = options.get(i);
+                if (inputType == InputType.SINGLE_CHOICE_NUMBER) {
+                    if (inputString.equalsIgnoreCase(options.get(i))) {
+                        validAnswer = true;
+                        answer = options.get(i);
+                    }
+                }
+                else {
+                    if (inputString.equalsIgnoreCase(getLetter(i))) {
+                        validAnswer = true;
+                        answer = options.get(i);
+                    }
                 }
             }
 
@@ -63,17 +96,84 @@ public class Input {
 
     }
 
+    public static int askQuestion(String question, InputType inputType, int minNumber, int maxNumber) {
+
+        String answer = "";
+        String inputString;
+        int answerNumber = -1;
+
+        boolean validAnswer = false;
+        int answerCounter = 0;
+
+        while (!validAnswer) {
+
+            if (answerCounter > 0) {
+                Log.printc(Log.RED, "Error! Answer not valid!");
+            }
+
+            Log.print(question);
+
+            inputString = scanner.nextLine();
+            answerCounter++;
+
+            answerNumber = parseNumber(inputString);
+
+            if (answerNumber > 0 && answerNumber >= minNumber && answerNumber <= maxNumber) {
+                validAnswer = true;
+            }
+
+        }
+
+        return answerNumber;
+
+    }
+
     public static String askQuestion(String question, InputType inputType) {
 
-        String answer;
+        String answer = "";
         String inputString;
 
-        Log.print(question);
-        inputString = scanner.nextLine();
-        answer = inputString;
+        if (inputType == InputType.TIME_INTERVAL) {
+
+            boolean validAnswer = false;
+            int answerCounter = 0;
+
+            while (!validAnswer) {
+
+                if (answerCounter > 0) {
+                    Log.printc(Log.RED, "Error! Answer not valid!");
+                }
+
+                Log.print(question);
+
+                inputString = scanner.nextLine();
+                answerCounter++;
+
+                if (inputString.isEmpty()) {
+                    validAnswer = true;
+                    answer = inputString;
+                }
+
+                else {
+                    TimePeriod answerTimePeriod = TimePeriod.parseTimePeriod(inputString);
+
+                    if (answerTimePeriod != null) {
+                        validAnswer = true;
+                        answer = answerTimePeriod.toString();
+                    }
+                }
+
+            }
+
+        }
+
+        else {
+            Log.print(question);
+            inputString = scanner.nextLine();
+            answer = inputString;
+        }
 
         return answer;
-
     }
 
 }

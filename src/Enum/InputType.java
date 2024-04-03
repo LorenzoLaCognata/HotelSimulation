@@ -4,6 +4,8 @@ public enum InputType {
     STRING,
     BOOLEAN,
     INTEGER,
-    SINGLE_CHOICE,
+    TIME_INTERVAL,
+    SINGLE_CHOICE_TEXT,
+    SINGLE_CHOICE_NUMBER,
     MULTIPLE_CHOICE
 }
