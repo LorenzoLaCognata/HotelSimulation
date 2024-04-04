@@ -1,3 +1,5 @@
+package Entity;
+
 import Enum.GuestStatus;
 
 import java.time.LocalDate;
@@ -23,10 +25,6 @@ public class Guest {
     }
 
     // Getter
-
-    public int getNumber() {
-        return number;
-    }
 
     public int getPeople() {
         return people;
@@ -60,14 +58,14 @@ public class Guest {
     public String toString() {
 
         String peopleString;
-        if (this.people == 1) {
+        if (people == 1) {
             peopleString = "person";
         }
         else {
             peopleString = "people";
         }
 
-        return "Guest " + this.number + " | "  + this.people + " " + peopleString + " | From " + this.startDate + " | To " + this.endDate + " | " + this.status;
+        return "Guest " + number + " | "  + people + " " + peopleString + " | From " + startDate + " | To " + endDate + " | " + status;
     }
 
 }

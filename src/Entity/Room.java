@@ -1,7 +1,10 @@
+package Entity;
+
 import Enum.RoomSize;
 import Enum.RoomType;
 import Enum.RoomStatus;
 import Enum.HotelStars;
+import IO.Log;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -12,19 +15,12 @@ public class Room {
     private final RoomSize size;
     private final RoomType type;
     private final int area;
-    private BigDecimal rate;
+    private final BigDecimal rate;
     private RoomStatus status = RoomStatus.FREE;
 
-    public static final ArrayList<RoomStatus> freeStatus = new ArrayList<RoomStatus>() {
+    public static final ArrayList<RoomStatus> freeStatus = new ArrayList<>() {
         {
             add(RoomStatus.FREE);
-        }
-    };
-
-    public static ArrayList<RoomStatus> allStatus = new ArrayList<RoomStatus>() {
-        {
-            add(RoomStatus.FREE);
-            add(RoomStatus.RESERVED);
         }
     };
 
@@ -44,18 +40,6 @@ public class Room {
         return number;
     }
 
-    public RoomSize getSize() {
-        return size;
-    }
-
-    public RoomType getType() {
-        return type;
-    }
-
-    public int getArea() {
-        return area;
-    }
-
     public BigDecimal getRate() {
         return rate;
     }
@@ -66,10 +50,6 @@ public class Room {
 
     // Setter
 
-    public void setRate(BigDecimal rate) {
-        this.rate = rate;
-    }
-
     public void setStatus(RoomStatus status) {
         this.status = status;
     }
@@ -79,22 +59,22 @@ public class Room {
 
     @Override
     public String toString() {
-        return "Room " + this.number + " | " + this.size + " | " + this.type + " | " + this.area + " m² | " + Log.currency.format(this.rate) + " | " + maxHotelStars(this.type, this.size, this.area) + " * | " + this.status;
+        return "Room " + number + " | " + size + " | " + type + " | " + area + " m² | " + Log.currencyString(rate) + " | " + maxHotelStars(type, size, area) + " * | " + status;
     }
 
     // Methods
 
     public int getSizeNumber() {
-        if (this.size == RoomSize.SINGLE) {
+        if (size == RoomSize.SINGLE) {
             return 1;
         }
-        else if (this.size == RoomSize.DOUBLE) {
+        else if (size == RoomSize.DOUBLE) {
             return 2;
         }
-        else if (this.size == RoomSize.TRIPLE) {
+        else if (size == RoomSize.TRIPLE) {
             return 3;
         }
-        else if (this.size == RoomSize.QUADRUPLE) {
+        else if (size == RoomSize.QUADRUPLE) {
             return 4;
         }
         else {
@@ -119,17 +99,6 @@ public class Room {
             case "DOUBLE" -> RoomSize.DOUBLE;
             case "TRIPLE" -> RoomSize.TRIPLE;
             case "QUADRUPLE" -> RoomSize.QUADRUPLE;
-            default -> null;
-        };
-    }
-
-    public static HotelStars stringToHotelStars(String string) {
-        return switch (string) {
-            case "ONE" -> HotelStars.ONE;
-            case "TWO" -> HotelStars.TWO;
-            case "THREE" -> HotelStars.THREE;
-            case "FOUR" -> HotelStars.FOUR;
-            case "FIVE" -> HotelStars.FIVE;
             default -> null;
         };
     }
@@ -216,7 +185,7 @@ public class Room {
 
     }
 
-    public static RoomType maxRoomType(RoomSize roomSize, HotelStars hotelStars) {
+    public static RoomType maxRoomType(RoomSize roomSize) {
 
         if (roomSize == RoomSize.SINGLE) {
             return RoomType.DELUXE;

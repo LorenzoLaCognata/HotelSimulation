@@ -1,8 +1,13 @@
+package Entity;
+
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.Period;
 
+import Entity.Guest;
+import Entity.Room;
 import Enum.ReservationStatus;
+import IO.Log;
 
 public class Reservation {
     private final Room room;
@@ -53,7 +58,7 @@ public class Reservation {
     }
 
     public BigDecimal calculatePrice() {
-        return rate.multiply(new BigDecimal(this.getNights()));
+        return rate.multiply(new BigDecimal(getNights()));
     }
 
     // Setter
@@ -66,7 +71,7 @@ public class Reservation {
 
     @Override
     public String toString() {
-        return "Reservation | From " + this.startDate + " | To " + this.endDate + " | " + Log.currency.format(this.getRate()) + " x " + this.getNights() + " = " + Log.currency.format(this.calculatePrice()) + " | GUEST (" + this.guest + ") | ROOM (" + this.room + ")";
+        return "Reservation | From " + startDate + " | To " + endDate + " | " + Log.currencyString(getRate()) + " x " + getNights() + " = " + Log.currencyString(calculatePrice()) + " | GUEST (" + guest + ") | ROOM (" + room + ")";
     }
 
 }

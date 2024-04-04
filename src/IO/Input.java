@@ -1,14 +1,18 @@
+package IO;
+
+import Enum.InputType;
+import Record.TimePeriod;
+
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.List;
 import java.util.Locale;
 import java.util.Scanner;
-import Enum.InputType;
 
 public class Input {
 
-    public static final Scanner scanner = new Scanner(System.in);
+    private static final Scanner scanner = new Scanner(System.in);
 
     public static String getLetter(int value) {
         char letter = (char) ('A' + value);
@@ -67,7 +71,7 @@ public class Input {
         while (!validAnswer) {
 
             if (answerCounter > 0) {
-                Log.printc(Log.RED, "Error! Answer not valid!");
+                Log.printColor(Log.RED, "Error! Answer not valid!");
             }
 
             Log.print(questionOptionsString(question, options, inputType));
@@ -96,9 +100,8 @@ public class Input {
 
     }
 
-    public static int askQuestion(String question, InputType inputType, int minNumber, int maxNumber) {
+    public static int askQuestion(String question, int minNumber, int maxNumber) {
 
-        String answer = "";
         String inputString;
         int answerNumber = -1;
 
@@ -108,7 +111,7 @@ public class Input {
         while (!validAnswer) {
 
             if (answerCounter > 0) {
-                Log.printc(Log.RED, "Error! Answer not valid!");
+                Log.printColor(Log.RED, "Error! Answer not valid!");
             }
 
             Log.print(question);
@@ -141,7 +144,7 @@ public class Input {
             while (!validAnswer) {
 
                 if (answerCounter > 0) {
-                    Log.printc(Log.RED, "Error! Answer not valid!");
+                    Log.printColor(Log.RED, "Error! Answer not valid!");
                 }
 
                 Log.print(question);

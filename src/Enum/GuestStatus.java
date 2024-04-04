@@ -6,4 +6,3 @@ public enum GuestStatus {
     STAYED,
     LOST
 }
-
