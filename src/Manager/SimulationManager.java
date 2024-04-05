@@ -1,40 +1,35 @@
+package Manager;
+
 import java.math.BigDecimal;
-import java.time.DayOfWeek;
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.*;
 
 import Entity.*;
 import Enum.*;
-import Record.TimePeriod;
 import IO.Input;
 import IO.Log;
 
-public class GameManager {
+public class SimulationManager {
     private final Hotel hotel = new Hotel();
     private final List<Guest> guests = new ArrayList<>();
 
     private static final Random rand = new Random();
     private static LocalDate gameDate = LocalDate.of (2023,12,31);
     private static final Double reservationRate = 0.15;
-    private static SetupMode hotelSetupMode = SetupMode.AUTOMATIC;
+    private static SetupMode setupMode = SetupMode.AUTOMATIC;
 
     // Constructor
 
-    public GameManager() {
-            Log.print("\nWelcome to Hotel Simulation!\n");
+    public SimulationManager() {
+        Log.initLog();
     }
 
     // Getter
 
-    public static LocalDate getGameDate() {
-        return gameDate;
-    }
-
     // Setter
 
     public static void setGameDate(LocalDate gameDate) {
-        GameManager.gameDate = gameDate;
+        SimulationManager.gameDate = gameDate;
     }
 
     // Methods / Hotel
@@ -44,14 +39,14 @@ public class GameManager {
         String hotelSetupString = Input.askQuestion("Hotel Setup: do you want to insert your input", List.of("MANUALLY", "AUTOMATICALLY"), InputType.SINGLE_CHOICE_TEXT);
 
         if (hotelSetupString.equalsIgnoreCase("MANUALLY")) {
-            hotelSetupMode = SetupMode.MANUAL;
+            setupMode = SetupMode.MANUAL;
         }
 
         /* Hotel Name */
 
         String hotelName = "My Hotel";
 
-        if (hotelSetupMode == SetupMode.MANUAL) {
+        if (setupMode == SetupMode.MANUAL) {
             hotelName = Input.askQuestion("Choose the name of your hotel", InputType.STRING);
         }
 
@@ -59,6 +54,16 @@ public class GameManager {
         Log.print("\nHOTEL | " + hotel.getName() + "\n");
 
         int availableArea = 200;
+
+        if (setupMode == SetupMode.MANUAL) {
+            availableArea = Input.askQuestion("Choose the size of your hotel in square meters", 100, 500);
+        }
+
+        BigDecimal rent = new BigDecimal(availableArea).multiply(new BigDecimal(50));
+        hotel.setRent(rent);
+        Log.print("\nRent for your hotel will cost " + Log.currencyString(rent));
+        Log.print("");
+
         int roomNumber = 1;
 
         RoomSize inputSize;
@@ -85,7 +90,7 @@ public class GameManager {
                 inputSize = RoomSize.QUADRUPLE;
             }
 
-            if (hotelSetupMode == SetupMode.MANUAL) {
+            if (setupMode == SetupMode.MANUAL) {
 
                 Log.print("You have " + availableArea + " square meters available for your rooms");
                 Log.print("Room " + roomNumber);
@@ -118,84 +123,55 @@ public class GameManager {
 
             }
 
-            hotel.addRoom(new Room(roomNumber, inputSize, inputType, area, rate));
+            hotel.reservationManager.addRoom(new Room(roomNumber, inputSize, inputType, area, rate));
             availableArea = availableArea - area;
             roomNumber = roomNumber + 1;
 
         }
 
-        if (hotelSetupMode == SetupMode.MANUAL) {
+        if (setupMode == SetupMode.MANUAL) {
             Log.print("All the square meters available were allocated to the rooms.\n");
         }
 
         Log.printColor(Log.WHITE_UNDERLINED, "ROOMS:");
-        Log.print(hotel.roomsString(hotel.getRooms()));
+        Log.print(hotel.reservationManager.roomsString(hotel.reservationManager.getRooms()));
 
-        initEmployees();
+        hotel.employeeManager.initEmployees(setupMode);
 
     }
 
     // Methods / Employee
 
-    public void initEmployees() {
+    public void advanceDate(int days) {
 
-        Employee assistant = new Employee("Alex Goldner", EmployeeRole.ASSISTANT_GENERAL_MANAGER, new BigDecimal(2000));
-        Log.print("Meet your new Assistant General Manager!");
-        Log.print("\tEMPLOYEE " + assistant + "\n");
+        for (int i = 0; i < days; i++) {
 
-        if (hotelSetupMode == SetupMode.MANUAL) {
+            setGameDate(gameDate.plusDays(1));
+            Log.print("--------------------------------------\n");
+            Log.printColor(Log.CYAN_BACKGROUND, "GAME DATE | " + gameDate + "\n");
 
-            for (DayOfWeek item: List.of(DayOfWeek.MONDAY, DayOfWeek.TUESDAY, DayOfWeek.WEDNESDAY, DayOfWeek.THURSDAY, DayOfWeek.FRIDAY, DayOfWeek.SATURDAY, DayOfWeek.SUNDAY)) {
-                String timePeriodString = Input.askQuestion("Choose the shift for " + item + " using the format hh:mm-hh:mm or leaving blank", InputType.TIME_INTERVAL);
-                TimePeriod timePeriod = TimePeriod.parseTimePeriod(timePeriodString);
-                if (timePeriod != null) {
-                    assistant.addShift(new Shift(item, timePeriod));
-                }
+            if (gameDate.getDayOfMonth() == gameDate.lengthOfMonth()) {
+                hotel.payRent(gameDate);
+                hotel.paySalaries(gameDate);
             }
 
-            hotel.getEmployees().add(assistant);
+            generateGuests();
+
+            hotel.reservationManager.generateCheckouts(gameDate);
+
+            Log.printColor(Log.WHITE_UNDERLINED, "ROOMS:");
+            Log.print(hotel.reservationManager.roomsString(hotel.reservationManager.getRooms()));
+
+            generateReservations();
+
+            hotel.reservationManager.generateCheckins(gameDate);
+
+            Log.printColor(Log.WHITE_UNDERLINED, "ROOMS:");
+            Log.print(hotel.reservationManager.roomsString(hotel.reservationManager.getRooms()));
+
+            hotel.financialManager.financialSummary();
 
         }
-
-        else {
-            assistant.addShift(new Shift(DayOfWeek.MONDAY, new TimePeriod(LocalTime.of(9,0), LocalTime.of(18, 0))));
-            assistant.addShift(new Shift(DayOfWeek.TUESDAY, new TimePeriod(LocalTime.of(9,0), LocalTime.of(18, 0))));
-            assistant.addShift(new Shift(DayOfWeek.WEDNESDAY, new TimePeriod(LocalTime.of(9,0), LocalTime.of(18, 0))));
-            assistant.addShift(new Shift(DayOfWeek.THURSDAY, new TimePeriod(LocalTime.of(9,0), LocalTime.of(18, 0))));
-            assistant.addShift(new Shift(DayOfWeek.FRIDAY, new TimePeriod(LocalTime.of(9,0), LocalTime.of(18, 0))));
-            assistant.addShift(new Shift(DayOfWeek.SATURDAY, new TimePeriod(LocalTime.of(9,0), LocalTime.of(13, 0))));
-
-            hotel.getEmployees().add(assistant);
-            Log.printColor(Log.WHITE_UNDERLINED, "EMPLOYEES:");
-            Log.print(hotel.employeesString());
-            Log.print(hotel.getEmployees().getFirst().shiftsString());
-        }
-
-    }
-
-    public void advanceDate() {
-
-        setGameDate(gameDate.plusDays(1));
-        Log.print("--------------------------------------\n");
-        Log.printColor(Log.CYAN_BACKGROUND, "GAME DATE | " + gameDate + "\n");
-
-        if (gameDate.getDayOfMonth() == 1) {
-            hotel.paySalaries(gameDate);
-        }
-
-        generateGuests();
-
-        generateCheckouts();
-
-        Log.printColor(Log.WHITE_UNDERLINED, "ROOMS:");
-        Log.print(hotel.roomsString(hotel.getRooms()));
-
-        generateReservations();
-
-        generateCheckins();
-
-        Log.printColor(Log.WHITE_UNDERLINED, "ROOMS:");
-        Log.print(hotel.roomsString(hotel.getRooms()));
 
     }
 
@@ -218,7 +194,7 @@ public class GameManager {
             }
         }
 
-        if (hotelSetupMode == SetupMode.AUTOMATIC) {
+        if (setupMode == SetupMode.AUTOMATIC) {
             printGuests();
         }
 
@@ -247,17 +223,9 @@ public class GameManager {
 
     // Methods / Reservation
 
-    public void reserveRoom(Room room, Guest guest, LocalDate startDate, LocalDate endDate, BigDecimal rate) {
-        room.setStatus(RoomStatus.RESERVED);
-        guest.setStatus(GuestStatus.STAYING);
-        Reservation reservation = new Reservation(room, guest, startDate, endDate, rate);
-        hotel.addReservation(reservation);
-        hotel.financialManager.addTransaction(new Transaction(TransactionType.RESERVATION, startDate, reservation.calculatePrice()));
-    }
-
     public void generateReservations() {
 
-        if (hotelSetupMode == SetupMode.MANUAL) {
+        if (setupMode == SetupMode.MANUAL) {
             Log.printColor(Log.WHITE_UNDERLINED, "GUESTS:");
         }
 
@@ -265,12 +233,12 @@ public class GameManager {
 
             if (guest.getStatus() == GuestStatus.WAITING) {
 
-                if (hotelSetupMode == SetupMode.MANUAL) {
+                if (setupMode == SetupMode.MANUAL) {
 
                     Log.print("\t" + guest);
 
-                    ArrayList<Room> rooms = hotel.subsetRooms(guest.getPeople(), Room.freeStatus);
-                    List<String> roomsOptions = hotel.subsetRoomOptions(guest.getPeople(), Room.freeStatus);
+                    ArrayList<Room> rooms = hotel.reservationManager.subsetRooms(guest.getPeople(), Room.freeStatus);
+                    List<String> roomsOptions = hotel.reservationManager.subsetRoomOptions(guest.getPeople(), Room.freeStatus);
 
                     if (rooms.isEmpty()) {
                         Log.print("\tThere are no available rooms\n");
@@ -278,12 +246,12 @@ public class GameManager {
 
                     else {
                         Log.print("\n\tAvailable Rooms:");
-                        Log.print(hotel.roomsString(rooms));
+                        Log.print(hotel.reservationManager.roomsString(rooms));
 
-                        int roomNumber = Input.parseNumber(Input.askQuestion("\tChoose Room number to assign to t", roomsOptions, InputType.SINGLE_CHOICE_NUMBER));
+                        int roomNumber = Input.parseNumber(Input.askQuestion("\tChoose Room number to assign to", roomsOptions, InputType.SINGLE_CHOICE_NUMBER));
 
                         boolean roomFound = false;
-                        for (Room room : hotel.getRooms()) {
+                        for (Room room : rooms) {
                             if (!roomFound && room.getStatus() == RoomStatus.FREE && room.getNumber() == roomNumber) {
                                 roomFound = true;
                                 reserveRoom(room, guest, gameDate, gameDate.plusDays(guest.getNights()), room.getRate());
@@ -295,7 +263,7 @@ public class GameManager {
                 else {
                     boolean roomFound = false;
                     for (int size = guest.getPeople(); size <= 4; size++) {
-                        for (Room room : hotel.getRooms()) {
+                        for (Room room : hotel.reservationManager.getRooms()) {
                             if (!roomFound && room.getStatus() == RoomStatus.FREE && room.getSizeNumber() == size) {
                                 roomFound = true;
                                 reserveRoom(room, guest, gameDate, gameDate.plusDays(guest.getNights()), room.getRate());
@@ -311,66 +279,17 @@ public class GameManager {
         }
 
         Log.printColor(Log.BLUE_UNDERLINED, "RESERVATIONS:");
-        Log.printColor(Log.BLUE, hotel.reservationsString());
+        Log.printColor(Log.BLUE, hotel.reservationManager.reservationsString());
 
     }
 
-    public void checkinGuest(Reservation reservation) {
-        reservation.setStatus(ReservationStatus.CHECKED_IN);
-        Log.printColor(Log.GREEN, "\tGuest (" + reservation.getGuest() + ") checked in to Room (" + reservation.getRoom() + ")");
+    public void reserveRoom(Room room, Guest guest, LocalDate startDate, LocalDate endDate, BigDecimal rate) {
+        room.setStatus(RoomStatus.RESERVED);
+        guest.setStatus(GuestStatus.STAYING);
+        Reservation reservation = new Reservation(room, guest, startDate, endDate, rate);
+        hotel.reservationManager.addReservation(reservation);
+        hotel.financialManager.addTransaction(new Transaction(TransactionType.RESERVATION, startDate, reservation.calculatePrice()));
     }
 
-    public void checkoutGuest(Reservation reservation) {
-        reservation.getRoom().setStatus(RoomStatus.FREE);
-        reservation.getGuest().setStatus((GuestStatus.STAYED));
-        reservation.setStatus(ReservationStatus.CHECKED_OUT);
-        Log.printColor(Log.RED, "\tGuest (" + reservation.getGuest() + ") checked out from Room (" + reservation.getRoom() + ")");
-    }
-
-    public void generateCheckins() {
-
-        Log.printColor(Log.GREEN_UNDERLINED, "CHECK-INS:");
-
-        int checkInsCount = 0;
-
-        for(Reservation reservation: hotel.getReservations()) {
-            if (reservation.getStatus() == ReservationStatus.CONFIRMED && reservation.getStartDate().isEqual(getGameDate())) {
-                checkinGuest(reservation);
-                checkInsCount++;
-            }
-        }
-
-        if (checkInsCount == 0) {
-            Log.printColor(Log.GREEN, "\t-");
-        }
-        Log.print("");
-
-    }
-
-    public void generateCheckouts() {
-
-        Log.printColor(Log.RED_UNDERLINED, "CHECK-OUTS:");
-
-        int checkOutsCount = 0;
-        for(Reservation reservation: hotel.getReservations()) {
-            if (reservation.getStatus() == ReservationStatus.CHECKED_IN && reservation.getEndDate().isEqual(getGameDate())) {
-                checkoutGuest(reservation);
-                checkOutsCount++;
-            }
-        }
-
-        if (checkOutsCount == 0) {
-            Log.printColor(Log.RED, "\t-");
-        }
-        Log.print("");
-
-    }
-
-    public void financialSummary() {
-        Log.printColor(Log.WHITE_UNDERLINED, "FINANCIAL SUMMARY");
-        Log.print("\tReservations: " + Log.currencyString(hotel.financialManager.getTransactionsAmount(TransactionType.RESERVATION)));
-        Log.print("\tSalaries: " + Log.currencyString(hotel.financialManager.getTransactionsAmount(TransactionType.SALARY)));
-        Log.print("\tBalance: " + Log.currencyString(hotel.financialManager.getBalance()));
-    }
 
 }

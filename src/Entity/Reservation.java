@@ -4,8 +4,6 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.Period;
 
-import Entity.Guest;
-import Entity.Room;
 import Enum.ReservationStatus;
 import IO.Log;
 

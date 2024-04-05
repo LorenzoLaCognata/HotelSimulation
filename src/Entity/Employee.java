@@ -1,6 +1,5 @@
 package Entity;
 
-import Entity.Shift;
 import Enum.EmployeeRole;
 
 import java.math.BigDecimal;

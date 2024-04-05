@@ -89,7 +89,7 @@ public class Room {
             case "DELUXE" -> RoomType.DELUXE;
             case "JUNIOR_SUITE" -> RoomType.JUNIOR_SUITE;
             case "SUITE" -> RoomType.SUITE;
-            default -> null;
+            default -> RoomType.STANDARD;
         };
     }
 

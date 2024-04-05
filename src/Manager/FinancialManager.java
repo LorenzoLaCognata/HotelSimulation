@@ -3,6 +3,7 @@ package Manager;
 import Entity.Transaction;
 
 import Enum.TransactionType;
+import IO.Log;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -38,6 +39,14 @@ public class FinancialManager {
 
         return amount;
 
+    }
+
+    public void financialSummary() {
+        Log.printColor(Log.WHITE_UNDERLINED, "FINANCIAL SUMMARY");
+        Log.print("\tRevenues: " + Log.currencyString(getTransactionsAmount(TransactionType.RESERVATION)));
+        Log.print("\tRent: " + Log.currencyString(getTransactionsAmount(TransactionType.RENT)));
+        Log.print("\tSalaries: " + Log.currencyString(getTransactionsAmount(TransactionType.SALARY)));
+        Log.print("\tBalance: " + Log.currencyString(getBalance()));
     }
 
 }

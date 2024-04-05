@@ -83,7 +83,7 @@ public class Log {
 //    public static final String CYAN_BACKGROUND_BRIGHT = "\033[0;106m";  // CYAN
 //    public static final String WHITE_BACKGROUND_BRIGHT = "\033[0;107m";   // WHITE
 
-    public Log() {
+    public static void initLog() {
 
         DecimalFormatSymbols formatSymbols = currency.getDecimalFormatSymbols();
         formatSymbols.setGroupingSeparator(',');
@@ -92,6 +92,8 @@ public class Log {
         currency.setDecimalFormatSymbols(formatSymbols);
         currency.setMinimumFractionDigits(2);
         currency.setMaximumFractionDigits(2);
+
+        Log.print("\nWelcome to Hotel Simulation!\n");
 
     }
 
