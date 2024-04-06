@@ -22,6 +22,10 @@ public class Employee {
 
     // Getter
 
+    public String getName() {
+        return name;
+    }
+
     public List<Shift> getShifts() {
         return shifts;
     }
@@ -40,10 +44,14 @@ public class Employee {
 
     public String shiftsString() {
 
-        String s = "SHIFTS:\n";
+        String s = "";
 
         for(Shift item: getShifts()) {
             s = s + "\t" + item + "\n";
+        }
+
+        if (s.isEmpty()) {
+            s = "-\n";
         }
 
         return s;
@@ -54,7 +62,7 @@ public class Employee {
 
     @Override
     public String toString() {
-        return name + " | " + role;
+        return "Employee | " + name + " | " + role;
     }
 
 }

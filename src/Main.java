@@ -1,9 +1,11 @@
 import Manager.SimulationManager;
 
-public static void main() {
+public class Main {
+    public static void main(String[] args) {
+         SimulationManager simulationManager = new SimulationManager();
+        simulationManager.initHotel();
+        simulationManager.mainMenu();
+//    simulationManager.advanceDate(31);
 
-    SimulationManager simulationManager = new SimulationManager();
-    simulationManager.initHotel();
-    simulationManager.advanceDate(31);
-
+    }
 }

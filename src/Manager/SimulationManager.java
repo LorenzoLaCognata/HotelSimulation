@@ -32,7 +32,7 @@ public class SimulationManager {
         SimulationManager.gameDate = gameDate;
     }
 
-    // Methods / Hotel
+    // Methods
 
     public void initHotel() {
 
@@ -51,17 +51,20 @@ public class SimulationManager {
         }
 
         hotel.setName(hotelName);
-        Log.print("\nHOTEL | " + hotel.getName() + "\n");
+        Log.printColor(Log.WHITE_UNDERLINED, "HOTEL");
+        Log.print("\t" + hotel.getName());
 
         int availableArea = 200;
 
         if (setupMode == SetupMode.MANUAL) {
-            availableArea = Input.askQuestion("Choose the size of your hotel in square meters", 100, 500);
+            availableArea = Input.askQuestion("\nChoose the size of your hotel in m²", 100, 500);
         }
+
+        Log.print("\tAvailable area for your hotel will be " + availableArea + " m²");
 
         BigDecimal rent = new BigDecimal(availableArea).multiply(new BigDecimal(50));
         hotel.setRent(rent);
-        Log.print("\nRent for your hotel will cost " + Log.currencyString(rent));
+        Log.print("\tRent for your hotel will cost " + Log.currencyString(rent));
         Log.print("");
 
         int roomNumber = 1;
@@ -92,8 +95,8 @@ public class SimulationManager {
 
             if (setupMode == SetupMode.MANUAL) {
 
-                Log.print("You have " + availableArea + " square meters available for your rooms");
                 Log.print("Room " + roomNumber);
+                Log.print("");
 
                 List<String> questionOptions = Room.allowedRoomSizes(Room.maxRoomSize(RoomType.STANDARD, HotelStars.ONE, availableArea));
                 String answer = Input.askQuestion("Choose the size for this room", questionOptions, InputType.SINGLE_CHOICE_TEXT);
@@ -114,12 +117,13 @@ public class SimulationManager {
                 int area4 = Room.minArea(inputType, inputSize, HotelStars.FOUR);
                 int area5 = Room.minArea(inputType, inputSize, HotelStars.FIVE);
                 Log.print(area1 + " m²: * | " + area2 + " m²: ** | " + area3 + " m²: *** | " + area4 + " m²: **** | " + area5 + " m²: *****");
+                Log.print("");
 
-                area = Input.askQuestion("Choose the number of square meters for this room", Room.minArea(inputType, inputSize, HotelStars.ONE), availableArea);
+                area = Input.askQuestion("Choose the number of m² for this room", Room.minArea(inputType, inputSize, HotelStars.ONE), availableArea);
 
                 /* Room Rate */
 
-                rate = new BigDecimal(Input.askQuestion("Choose the daily rate in € for  b room", 0, Integer.MAX_VALUE));
+                rate = new BigDecimal(Input.askQuestion("Choose the daily rate in € for this room", 0, Integer.MAX_VALUE));
 
             }
 
@@ -129,18 +133,80 @@ public class SimulationManager {
 
         }
 
-        if (setupMode == SetupMode.MANUAL) {
-            Log.print("All the square meters available were allocated to the rooms.\n");
-        }
-
-        Log.printColor(Log.WHITE_UNDERLINED, "ROOMS:");
+        Log.printColor(Log.WHITE_UNDERLINED, "ROOMS");
         Log.print(hotel.reservationManager.roomsString(hotel.reservationManager.getRooms()));
 
-        hotel.employeeManager.initEmployees(setupMode);
+        hotel.employeeManager.initEmployees();
 
     }
 
-    // Methods / Employee
+    public void mainMenu() {
+
+        Log.printColor(Log.WHITE_UNDERLINED, "MAIN MENU");
+        String mainMenuChoice = Input.askQuestion("", List.of("GUESTS", "ROOMS", "EMPLOYEES", "ADVANCE DATE"), InputType.SINGLE_CHOICE_TEXT);
+
+        if (mainMenuChoice.equalsIgnoreCase("GUESTS")) {
+            Log.print("Page under construction (note: RESERVATIONS, CHECK-INS, CHECK-OUTS)");
+            Log.print("");
+            mainMenu();
+        }
+        else if (mainMenuChoice.equalsIgnoreCase("ROOMS")) {
+            Log.print("Page under construction");
+            Log.print("");
+            mainMenu();
+        }
+        else if (mainMenuChoice.equalsIgnoreCase("EMPLOYEES")) {
+            employeesMenu();
+        }
+        else if (mainMenuChoice.equalsIgnoreCase("ADVANCE DATE")) {
+            Log.print("Page under construction (note: print Financial Summary)");
+            Log.print("");
+            mainMenu();
+        }
+
+    }
+
+    public void employeesMenu() {
+
+        Log.printColor(Log.WHITE_UNDERLINED, "EMPLOYEES");
+        Log.print(hotel.employeeManager.employeesString());
+
+        String employeesMenuChoice = Input.askQuestion("", List.of("SHIFTS", "BACK"), InputType.SINGLE_CHOICE_TEXT);
+
+        if (employeesMenuChoice.equalsIgnoreCase("BACK")) {
+            mainMenu();
+        }
+        else if (employeesMenuChoice.equalsIgnoreCase("SHIFTS")) {
+            employeesShiftsMenu();
+        }
+
+    }
+
+    public void employeesShiftsMenu() {
+
+        String employeesMenuChoice = Input.askQuestion("Select an employee", hotel.employeeManager.employeesQuestionChoices(), InputType.SINGLE_CHOICE_TEXT);
+
+        for (Employee item: hotel.employeeManager.getEmployees()) {
+            if (item.getName().equalsIgnoreCase(employeesMenuChoice)) {
+                Log.printColor(Log.WHITE_UNDERLINED, "SHIFTS");
+                Log.print(item.shiftsString());
+
+                String employeeShiftMenuChoice = Input.askQuestion("", List.of("SET SHIFTS", "BACK"), InputType.SINGLE_CHOICE_TEXT);
+
+                if (employeeShiftMenuChoice.equalsIgnoreCase("BACK")) {
+                    employeesMenu();
+                }
+                else if (employeeShiftMenuChoice.equalsIgnoreCase("SET SHIFTS")) {
+                    hotel.employeeManager.setShift(item);
+                    Log.printColor(Log.WHITE_UNDERLINED, "SHIFTS");
+                    Log.print(item.shiftsString());
+                    employeesMenu();
+                }
+
+            }
+        }
+
+    }
 
     public void advanceDate(int days) {
 
@@ -174,8 +240,6 @@ public class SimulationManager {
         }
 
     }
-
-    // Methods / Guest
 
     public void generateGuests() {
 
@@ -220,8 +284,6 @@ public class SimulationManager {
         }
 
     }
-
-    // Methods / Reservation
 
     public void generateReservations() {
 

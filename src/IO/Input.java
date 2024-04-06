@@ -37,7 +37,11 @@ public class Input {
 
     private static String questionOptionsString(String question, List<String> options, InputType inputType) {
 
-        String questionOptions = question + ": ";
+        String questionOptions = question;
+
+        if (!question.isEmpty()) {
+            questionOptions = questionOptions + ": ";
+        }
 
         for (int i = 0; i< options.size(); i++) {
 
@@ -78,6 +82,7 @@ public class Input {
 
             inputString = scanner.nextLine();
             answerCounter++;
+            Log.print("");
 
             for (int i = 0; i < options.size(); i++) {
                 if (inputType == InputType.SINGLE_CHOICE_NUMBER) {
@@ -118,6 +123,7 @@ public class Input {
 
             inputString = scanner.nextLine();
             answerCounter++;
+            Log.print("");
 
             answerNumber = parseNumber(inputString);
 
@@ -151,6 +157,7 @@ public class Input {
 
                 inputString = scanner.nextLine();
                 answerCounter++;
+                Log.print("");
 
                 if (inputString.isEmpty()) {
                     validAnswer = true;
@@ -173,6 +180,7 @@ public class Input {
         else {
             Log.print(question);
             inputString = scanner.nextLine();
+            Log.print("");
             answer = inputString;
         }
 
