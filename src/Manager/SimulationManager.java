@@ -14,7 +14,7 @@ public class SimulationManager {
     private final List<Guest> guests = new ArrayList<>();
 
     private static final Random rand = new Random();
-    private static LocalDate gameDate = LocalDate.of (2023,12,31);
+    private static LocalDate gameDate = LocalDate.of (2024,1,1);
     private static final Double reservationRate = 0.15;
     private static SetupMode setupMode = SetupMode.AUTOMATIC;
 
@@ -76,8 +76,6 @@ public class SimulationManager {
 
         while (availableArea >= Room.minArea(RoomType.STANDARD, RoomSize.SINGLE, HotelStars.ONE)) {
 
-            /* Room Size */
-
             double roomRandom = rand.nextDouble();
 
             if (roomRandom < 0.25) {
@@ -102,13 +100,9 @@ public class SimulationManager {
                 String answer = Input.askQuestion("Choose the size for this room", questionOptions, InputType.SINGLE_CHOICE_TEXT);
                 inputSize = Room.stringToRoomSize(answer);
 
-                /* Room Type */
-
                 questionOptions = Room.allowedRoomTypes(Room.maxRoomType(inputSize));
                 answer = Input.askQuestion("Choose the type for this room", questionOptions, InputType.SINGLE_CHOICE_TEXT);
                 inputType = Room.stringToRoomType(answer);
-
-                /* Room Area */
 
                 Log.print("These are the requirements for the selected room size and type:");
                 int area1 = Room.minArea(inputType, inputSize, HotelStars.ONE);
@@ -120,8 +114,6 @@ public class SimulationManager {
                 Log.print("");
 
                 area = Input.askQuestion("Choose the number of m² for this room", Room.minArea(inputType, inputSize, HotelStars.ONE), availableArea);
-
-                /* Room Rate */
 
                 rate = new BigDecimal(Input.askQuestion("Choose the daily rate in € for this room", 0, Integer.MAX_VALUE));
 
@@ -138,6 +130,9 @@ public class SimulationManager {
 
         hotel.employeeManager.initEmployees();
 
+        Log.printColor(Log.CYAN_BACKGROUND, "GAME DATE | " + gameDate);
+        Log.print("");
+
     }
 
     public void mainMenu() {
@@ -151,18 +146,96 @@ public class SimulationManager {
             mainMenu();
         }
         else if (mainMenuChoice.equalsIgnoreCase("ROOMS")) {
-            Log.print("Page under construction");
-            Log.print("");
-            mainMenu();
+            roomsMenu();
         }
         else if (mainMenuChoice.equalsIgnoreCase("EMPLOYEES")) {
             employeesMenu();
         }
         else if (mainMenuChoice.equalsIgnoreCase("ADVANCE DATE")) {
-            Log.print("Page under construction (note: print Financial Summary)");
-            Log.print("");
+            advanceDate();
             mainMenu();
         }
+
+    }
+
+    public void roomsMenu() {
+
+        Log.printColor(Log.WHITE_UNDERLINED, "ROOMS:");
+        Log.print(hotel.reservationManager.roomsString(hotel.reservationManager.getRooms()));
+
+        String roomsMenuChoice = Input.askQuestion("", List.of("SET RATE", "SET TYPE", "SET SIZE", "BACK"), InputType.SINGLE_CHOICE_TEXT);
+
+        if (roomsMenuChoice.equalsIgnoreCase("BACK")) {
+            mainMenu();
+        }
+        else if (roomsMenuChoice.equalsIgnoreCase("SET RATE")) {
+            roomRateMenu();
+        }
+        else if (roomsMenuChoice.equalsIgnoreCase("SET TYPE")) {
+            roomTypeMenu();
+        }
+        else if (roomsMenuChoice.equalsIgnoreCase("SET SIZE")) {
+            roomSizeMenu();
+        }
+
+    }
+
+    public void roomRateMenu() {
+
+        String roomRateMenuChoice = Input.askQuestion("Select a room", hotel.reservationManager.subsetRoomOptions(), InputType.SINGLE_CHOICE_NUMBER);
+
+        for (Room item: hotel.reservationManager.getRooms()) {
+            if (String.valueOf(item.getNumber()).equalsIgnoreCase(roomRateMenuChoice)) {
+
+                BigDecimal rate = new BigDecimal(Input.askQuestion("Choose the daily rate in € for this room", 0, Integer.MAX_VALUE));
+                item.setRate(rate);
+            }
+        }
+
+        Collections.sort(hotel.reservationManager.getRooms());
+        roomsMenu();
+
+    }
+
+    public void roomTypeMenu() {
+
+        String roomRateMenuChoice = Input.askQuestion("Select a room", hotel.reservationManager.subsetRoomOptions(), InputType.SINGLE_CHOICE_NUMBER);
+
+        for (Room item: hotel.reservationManager.getRooms()) {
+
+            if (String.valueOf(item.getNumber()).equalsIgnoreCase(roomRateMenuChoice)) {
+
+                List<String> questionOptions = Room.allowedRoomTypes(Room.maxRoomType(item.getSize(), item.getArea()));
+                String answer = Input.askQuestion("Choose the type for this room", questionOptions, InputType.SINGLE_CHOICE_TEXT);
+                RoomType type = Room.stringToRoomType(answer);
+                item.setType(type);
+
+            }
+        }
+
+        Collections.sort(hotel.reservationManager.getRooms());
+        roomsMenu();
+
+    }
+
+    public void roomSizeMenu() {
+
+        String roomRateMenuChoice = Input.askQuestion("Select a room", hotel.reservationManager.subsetRoomOptions(), InputType.SINGLE_CHOICE_NUMBER);
+
+        for (Room item: hotel.reservationManager.getRooms()) {
+
+            if (String.valueOf(item.getNumber()).equalsIgnoreCase(roomRateMenuChoice)) {
+
+                List<String> questionOptions = Room.allowedRoomSizes(Room.maxRoomSize(RoomType.STANDARD, HotelStars.ONE, item.getArea()));
+                String answer = Input.askQuestion("Choose the size for this room", questionOptions, InputType.SINGLE_CHOICE_TEXT);
+                RoomSize size = Room.stringToRoomSize(answer);
+                item.setSize(size);
+
+            }
+        }
+
+        Collections.sort(hotel.reservationManager.getRooms());
+        roomsMenu();
 
     }
 
@@ -191,12 +264,12 @@ public class SimulationManager {
                 Log.printColor(Log.WHITE_UNDERLINED, "SHIFTS");
                 Log.print(item.shiftsString());
 
-                String employeeShiftMenuChoice = Input.askQuestion("", List.of("SET SHIFTS", "BACK"), InputType.SINGLE_CHOICE_TEXT);
+                String employeeShiftMenuChoice = Input.askQuestion("", List.of("SET SHIFT", "BACK"), InputType.SINGLE_CHOICE_TEXT);
 
                 if (employeeShiftMenuChoice.equalsIgnoreCase("BACK")) {
                     employeesMenu();
                 }
-                else if (employeeShiftMenuChoice.equalsIgnoreCase("SET SHIFTS")) {
+                else if (employeeShiftMenuChoice.equalsIgnoreCase("SET SHIFT")) {
                     hotel.employeeManager.setShift(item);
                     Log.printColor(Log.WHITE_UNDERLINED, "SHIFTS");
                     Log.print(item.shiftsString());
@@ -208,7 +281,7 @@ public class SimulationManager {
 
     }
 
-    public void advanceDate(int days) {
+    public void simulate(int days) {
 
         for (int i = 0; i < days; i++) {
 
@@ -237,6 +310,22 @@ public class SimulationManager {
 
             hotel.financialManager.financialSummary();
 
+        }
+
+    }
+
+    public void advanceDate() {
+
+        setGameDate(gameDate.plusDays(1));
+        Log.printColor(Log.CYAN_BACKGROUND, "GAME DATE | " + gameDate);
+        Log.print("");
+
+        hotel.financialManager.financialSummary();
+        Log.print("");
+
+        if (gameDate.getDayOfMonth() == 1) {
+            hotel.payRent(gameDate);
+            hotel.paySalaries(gameDate);
         }
 
     }

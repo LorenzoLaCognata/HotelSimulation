@@ -5,17 +5,18 @@ import Enum.RoomType;
 import Enum.RoomStatus;
 import Enum.HotelStars;
 import IO.Log;
+import org.jetbrains.annotations.NotNull;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Room {
+public class Room implements Comparable<Room> {
     private final int number;
-    private final RoomSize size;
-    private final RoomType type;
+    private RoomSize size;
+    private RoomType type;
     private final int area;
-    private final BigDecimal rate;
+    private BigDecimal rate;
     private RoomStatus status = RoomStatus.FREE;
 
     public static final ArrayList<RoomStatus> freeStatus = new ArrayList<>() {
@@ -44,6 +45,18 @@ public class Room {
         return rate;
     }
 
+    public RoomSize getSize() {
+        return size;
+    }
+
+    public RoomType getType() {
+        return type;
+    }
+
+    public int getArea() {
+        return area;
+    }
+
     public RoomStatus getStatus() {
         return status;
     }
@@ -54,12 +67,32 @@ public class Room {
         this.status = status;
     }
 
+    public void setRate(BigDecimal rate) {
+        this.rate = rate;
+    }
+
+    public void setSize(RoomSize size) {
+        this.size = size;
+    }
+
+    public void setType(RoomType type) {
+        this.type = type;
+    }
 
     // Override
 
     @Override
     public String toString() {
         return "Room " + number + " | " + size + " | " + type + " | " + area + " m² | " + Log.currencyString(rate) + " | " + maxHotelStars(type, size, area) + " * | " + status;
+    }
+
+    @Override
+    public int compareTo(@NotNull Room other) {
+
+        int thisNumber = getSizeNumber()*100 + getTypeNumber()*10 + getNumber();
+        int otherNumber = other.getSizeNumber()*100 + other.getTypeNumber()*10 + other.getNumber();
+        return Integer.compare(thisNumber, otherNumber);
+
     }
 
     // Methods
@@ -76,6 +109,27 @@ public class Room {
         }
         else if (size == RoomSize.QUADRUPLE) {
             return 4;
+        }
+        else {
+            return 0;
+        }
+    }
+
+    public int getTypeNumber() {
+        if (type == RoomType.STANDARD) {
+            return 1;
+        }
+        else if (type == RoomType.SUPERIOR) {
+            return 2;
+        }
+        else if (type == RoomType.DELUXE) {
+            return 3;
+        }
+        else if (type == RoomType.JUNIOR_SUITE) {
+            return 4;
+        }
+        else if (type == RoomType.SUITE) {
+            return 5;
         }
         else {
             return 0;
@@ -360,6 +414,44 @@ public class Room {
                 else {
                     return null;
                 }
+            }
+        }
+
+        return null;
+    }
+
+    public static RoomType maxRoomType(RoomSize roomSize, int area) {
+
+        if (roomSize == RoomSize.SINGLE) {
+            if (area >= 11) {
+                return RoomType.DELUXE;
+            }
+        }
+        else if (roomSize == RoomSize.DOUBLE) {
+            if (area >= 26) {
+                return RoomType.SUITE;
+            } else if (area >= 21) {
+                return RoomType.JUNIOR_SUITE;
+            } else if (area >= 17) {
+                return RoomType.DELUXE;
+            }
+        }
+        else if (roomSize == RoomSize.TRIPLE) {
+            if (area >= 32) {
+                return RoomType.SUITE;
+            } else if (area >= 27) {
+                return RoomType.JUNIOR_SUITE;
+            } else if (area >= 23) {
+                return RoomType.DELUXE;
+            }
+        }
+        else if (roomSize == RoomSize.QUADRUPLE) {
+            if (area >= 38) {
+                return RoomType.SUITE;
+            } else if (area >= 33) {
+                return RoomType.JUNIOR_SUITE;
+            } else if (area >= 29) {
+                return RoomType.DELUXE;
             }
         }
 

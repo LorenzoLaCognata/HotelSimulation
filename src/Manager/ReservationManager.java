@@ -9,6 +9,7 @@ import IO.Log;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class ReservationManager {
@@ -30,6 +31,7 @@ public class ReservationManager {
 
     public void addRoom(Room room) {
         rooms.add(room);
+        Collections.sort(rooms);
     }
 
     public void addReservation(Reservation reservation) {
@@ -117,6 +119,20 @@ public class ReservationManager {
 
     }
 
+    public ArrayList<String> subsetRoomOptions() {
+
+        ArrayList<String> roomOptions = new ArrayList<>();
+
+        for(Room item: rooms) {
+            roomOptions.add(String.valueOf(item.getNumber()));
+        }
+
+//        rooms.sort();
+
+        return roomOptions;
+
+    }
+
     public String roomsString(List<Room> rooms) {
 
         String s = "";
@@ -146,4 +162,5 @@ public class ReservationManager {
         return s;
 
     }
+
 }

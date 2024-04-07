@@ -5,7 +5,7 @@ public class Main {
          SimulationManager simulationManager = new SimulationManager();
         simulationManager.initHotel();
         simulationManager.mainMenu();
-//    simulationManager.advanceDate(31);
+//    simulationManager.simulate(31);
 
     }
 }
