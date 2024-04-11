@@ -323,6 +323,9 @@ public class SimulationManager {
         hotel.financialManager.financialSummary();
         Log.print("");
 
+        hotel.reservationManager.reservationSummary(gameDate);
+        Log.print("");
+
         if (gameDate.getDayOfMonth() == 1) {
             hotel.payRent(gameDate);
             hotel.paySalaries(gameDate);

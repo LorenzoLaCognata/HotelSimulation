@@ -20,9 +20,11 @@ public class Room implements Comparable<Room> {
     private RoomStatus status = RoomStatus.FREE;
 
     public static final ArrayList<RoomStatus> freeStatus = new ArrayList<>() {
-        {
-            add(RoomStatus.FREE);
-        }
+        {add(RoomStatus.FREE);}
+    };
+
+    public static final ArrayList<RoomStatus> reservedStatus = new ArrayList<>() {
+        {add(RoomStatus.RESERVED);}
     };
 
     // Constructor

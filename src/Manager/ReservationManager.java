@@ -7,6 +7,8 @@ import Enum.RoomStatus;
 import Enum.GuestStatus;
 import IO.Log;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -161,6 +163,52 @@ public class ReservationManager {
 
         return s;
 
+    }
+
+    public BigDecimal averageDailyRate(LocalDate gameDate) {
+
+        BigDecimal totalRevenue = new BigDecimal(0);
+        int occupiedRooms = 0;
+
+        for (Reservation item: reservations) {
+            if (item.getStartDate().isBefore(gameDate) || item.getStartDate().isEqual(gameDate)) {
+                if (item.getEndDate().isAfter(gameDate)) {
+                    totalRevenue = totalRevenue.add(item.getRate());
+                    occupiedRooms++;
+                }
+            }
+        }
+
+        if (occupiedRooms > 0) {
+            return totalRevenue.divide(new BigDecimal(occupiedRooms), RoundingMode.DOWN);
+        }
+        else {
+            return new BigDecimal(0);
+        }
+
+    }
+
+    public BigDecimal revenuePerAvailableRoom(LocalDate gameDate) {
+
+        BigDecimal totalRevenue = new BigDecimal(0);
+
+        for (Reservation item: reservations) {
+            if (item.getStartDate().isBefore(gameDate) || item.getStartDate().isEqual(gameDate)) {
+                if (item.getEndDate().isAfter(gameDate)) {
+                    totalRevenue = totalRevenue.add(item.getRate());
+                }
+            }
+        }
+
+        return totalRevenue.divide(new BigDecimal(rooms.size()), RoundingMode.DOWN);
+
+    }
+
+    public void reservationSummary(LocalDate gameDate) {
+        Log.printColor(Log.WHITE_UNDERLINED, "RESERVATION SUMMARY");
+        Log.print("\tOccupancy: " + subsetRooms(0, Room.reservedStatus).size() + "/" + rooms.size() + " (" + subsetRooms(0, Room.reservedStatus).size() / rooms.size()+ "%)");
+        Log.print("\tRevPAR: " + Log.currencyString(revenuePerAvailableRoom(gameDate)));
+        Log.print("\tADR: " + Log.currencyString(averageDailyRate(gameDate)));
     }
 
 }
