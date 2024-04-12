@@ -26,10 +26,6 @@ public class Employee {
         return name;
     }
 
-    public List<Shift> getShifts() {
-        return shifts;
-    }
-
     public BigDecimal getSalary() {
         return salary;
     }
@@ -42,11 +38,11 @@ public class Employee {
 
     // Methods
 
-    public String shiftsString() {
+    public String toShiftsString() {
 
         String s = "";
 
-        for(Shift item: getShifts()) {
+        for(Shift item: shifts) {
             s = s + "\t" + item + "\n";
         }
 

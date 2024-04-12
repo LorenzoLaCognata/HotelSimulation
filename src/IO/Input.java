@@ -1,11 +1,14 @@
 package IO;
 
 import Enum.InputType;
-import Record.TimePeriod;
+import Enum.RoomSize;
+import Enum.RoomType;
+import Entity.TimePeriod;
 
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Scanner;
@@ -187,4 +190,54 @@ public class Input {
         return answer;
     }
 
+    /**
+     *
+     * @param maxRoomSize
+     * @return
+     */
+    public static List<String> roomSizeOptions(RoomSize maxRoomSize) {
+
+        List<String> allowedRoomSizes = new ArrayList<>();
+        if (maxRoomSize == RoomSize.SINGLE || maxRoomSize == RoomSize.DOUBLE || maxRoomSize == RoomSize.TRIPLE || maxRoomSize == RoomSize.QUADRUPLE) {
+            allowedRoomSizes.add("SINGLE");
+        }
+        if (maxRoomSize == RoomSize.DOUBLE || maxRoomSize == RoomSize.TRIPLE || maxRoomSize == RoomSize.QUADRUPLE) {
+            allowedRoomSizes.add("DOUBLE");
+        }
+        if (maxRoomSize == RoomSize.TRIPLE || maxRoomSize == RoomSize.QUADRUPLE) {
+            allowedRoomSizes.add("TRIPLE");
+        }
+        if (maxRoomSize == RoomSize.QUADRUPLE) {
+            allowedRoomSizes.add("QUADRUPLE");
+        }
+        return allowedRoomSizes;
+
+    }
+
+    /**
+     *
+     * @param maxRoomType
+     * @return
+     */
+    public static List<String> roomTypeOptions(RoomType maxRoomType) {
+
+        List<String> allowedRoomTypes = new ArrayList<>();
+        if (maxRoomType == RoomType.STANDARD || maxRoomType == RoomType.SUPERIOR || maxRoomType == RoomType.DELUXE || maxRoomType == RoomType.JUNIOR_SUITE || maxRoomType == RoomType.SUITE) {
+            allowedRoomTypes.add("STANDARD");
+        }
+        if (maxRoomType == RoomType.SUPERIOR || maxRoomType == RoomType.DELUXE || maxRoomType == RoomType.JUNIOR_SUITE || maxRoomType == RoomType.SUITE) {
+            allowedRoomTypes.add("SUPERIOR");
+        }
+        if (maxRoomType == RoomType.DELUXE || maxRoomType == RoomType.JUNIOR_SUITE || maxRoomType == RoomType.SUITE) {
+            allowedRoomTypes.add("DELUXE");
+        }
+        if (maxRoomType == RoomType.JUNIOR_SUITE || maxRoomType == RoomType.SUITE) {
+            allowedRoomTypes.add("JUNIOR_SUITE");
+        }
+        if (maxRoomType == RoomType.SUITE) {
+            allowedRoomTypes.add("SUITE");
+        }
+        return allowedRoomTypes;
+
+    }
 }

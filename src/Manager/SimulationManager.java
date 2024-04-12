@@ -96,13 +96,13 @@ public class SimulationManager {
                 Log.print("Room " + roomNumber);
                 Log.print("");
 
-                List<String> questionOptions = Room.allowedRoomSizes(Room.maxRoomSize(RoomType.STANDARD, HotelStars.ONE, availableArea));
+                List<String> questionOptions = Input.roomSizeOptions(RoomSize.maxRoomSize(RoomType.STANDARD, HotelStars.ONE, availableArea));
                 String answer = Input.askQuestion("Choose the size for this room", questionOptions, InputType.SINGLE_CHOICE_TEXT);
-                inputSize = Room.stringToRoomSize(answer);
+                inputSize = RoomSize.parseRoomSize(answer);
 
-                questionOptions = Room.allowedRoomTypes(Room.maxRoomType(inputSize));
+                questionOptions = Input.roomTypeOptions(RoomType.maxRoomType(inputSize));
                 answer = Input.askQuestion("Choose the type for this room", questionOptions, InputType.SINGLE_CHOICE_TEXT);
-                inputType = Room.stringToRoomType(answer);
+                inputType = RoomType.parseRoomType(answer);
 
                 Log.print("These are the requirements for the selected room size and type:");
                 int area1 = Room.minArea(inputType, inputSize, HotelStars.ONE);
@@ -205,9 +205,9 @@ public class SimulationManager {
 
             if (String.valueOf(item.getNumber()).equalsIgnoreCase(roomRateMenuChoice)) {
 
-                List<String> questionOptions = Room.allowedRoomTypes(Room.maxRoomType(item.getSize(), item.getArea()));
+                List<String> questionOptions = Input.roomTypeOptions(RoomType.maxRoomType(item.getSize(), item.getArea()));
                 String answer = Input.askQuestion("Choose the type for this room", questionOptions, InputType.SINGLE_CHOICE_TEXT);
-                RoomType type = Room.stringToRoomType(answer);
+                RoomType type = RoomType.parseRoomType(answer);
                 item.setType(type);
 
             }
@@ -226,9 +226,9 @@ public class SimulationManager {
 
             if (String.valueOf(item.getNumber()).equalsIgnoreCase(roomRateMenuChoice)) {
 
-                List<String> questionOptions = Room.allowedRoomSizes(Room.maxRoomSize(RoomType.STANDARD, HotelStars.ONE, item.getArea()));
+                List<String> questionOptions = Input.roomSizeOptions(RoomSize.maxRoomSize(RoomType.STANDARD, HotelStars.ONE, item.getArea()));
                 String answer = Input.askQuestion("Choose the size for this room", questionOptions, InputType.SINGLE_CHOICE_TEXT);
-                RoomSize size = Room.stringToRoomSize(answer);
+                RoomSize size = RoomSize.parseRoomSize(answer);
                 item.setSize(size);
 
             }
@@ -262,7 +262,7 @@ public class SimulationManager {
         for (Employee item: hotel.employeeManager.getEmployees()) {
             if (item.getName().equalsIgnoreCase(employeesMenuChoice)) {
                 Log.printColor(Log.WHITE_UNDERLINED, "SHIFTS");
-                Log.print(item.shiftsString());
+                Log.print(item.toShiftsString());
 
                 String employeeShiftMenuChoice = Input.askQuestion("", List.of("SET SHIFT", "BACK"), InputType.SINGLE_CHOICE_TEXT);
 
@@ -272,7 +272,7 @@ public class SimulationManager {
                 else if (employeeShiftMenuChoice.equalsIgnoreCase("SET SHIFT")) {
                     hotel.employeeManager.setShift(item);
                     Log.printColor(Log.WHITE_UNDERLINED, "SHIFTS");
-                    Log.print(item.shiftsString());
+                    Log.print(item.toShiftsString());
                     employeesMenu();
                 }
 

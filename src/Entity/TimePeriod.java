@@ -1,4 +1,4 @@
-package Record;
+package Entity;
 
 import IO.Input;
 

@@ -6,7 +6,7 @@ import IO.Input;
 import IO.Log;
 import Enum.EmployeeRole;
 import Enum.InputType;
-import Record.TimePeriod;
+import Entity.TimePeriod;
 
 import java.math.BigDecimal;
 import java.time.DayOfWeek;

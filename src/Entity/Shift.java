@@ -1,7 +1,5 @@
 package Entity;
 
-import Record.TimePeriod;
-
 import java.time.DayOfWeek;
 
 public class Shift {
