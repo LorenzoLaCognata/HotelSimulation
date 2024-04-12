@@ -50,11 +50,7 @@ public class Room implements Comparable<Room> {
     public RoomSize getSize() {
         return size;
     }
-
-    public RoomType getType() {
-        return type;
-    }
-
+    
     public int getArea() {
         return area;
     }
