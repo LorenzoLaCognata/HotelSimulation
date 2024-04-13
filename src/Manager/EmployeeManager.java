@@ -13,19 +13,25 @@ import java.time.DayOfWeek;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ *
+ */
 public class EmployeeManager {
 
     private final List<Employee> employees = new ArrayList<>();
 
-    // Getter
-
+    /**
+     *
+     * @return
+     */
     public List<Employee> getEmployees() {
         return employees;
     }
 
-    // Methods
-
-    public void initEmployees() {
+    /**
+     *
+     */
+    public void defaultEmployee() {
 
         Log.printColor(Log.WHITE_UNDERLINED, "EMPLOYEES");
 
@@ -38,6 +44,10 @@ public class EmployeeManager {
 
     }
 
+    /**
+     *
+     * @param employee
+     */
     public void setShift(Employee employee) {
 
         for (DayOfWeek item: List.of(DayOfWeek.MONDAY, DayOfWeek.TUESDAY, DayOfWeek.WEDNESDAY, DayOfWeek.THURSDAY, DayOfWeek.FRIDAY, DayOfWeek.SATURDAY, DayOfWeek.SUNDAY)) {
@@ -50,7 +60,11 @@ public class EmployeeManager {
 
     }
 
-    public String employeesString() {
+    /**
+     *
+     * @return
+     */
+    public String employeesToString() {
 
         String s = "";
 
@@ -62,6 +76,10 @@ public class EmployeeManager {
 
     }
 
+    /**
+     *
+     * @return
+     */
     public List<String> employeesQuestionChoices() {
 
         List<String> list = new ArrayList<>();

@@ -1,5 +1,6 @@
 package Manager;
 
+import KPIs.ReservationKPIs;
 import Entity.Reservation;
 import Entity.Room;
 import Enum.ReservationStatus;
@@ -7,46 +8,66 @@ import Enum.RoomStatus;
 import Enum.GuestStatus;
 import IO.Log;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ *
+ */
 public class ReservationManager {
 
     private final List<Room> rooms = new ArrayList<>();
     private final List<Reservation> reservations = new ArrayList<>();
+    private final ReservationKPIs reservationKPIs = new ReservationKPIs();
 
-    // Getter
-
+    /**
+     *
+     * @return
+     */
     public List<Room> getRooms() {
         return rooms;
     }
 
+    /**
+     *
+     * @return
+     */
     public List<Reservation> getReservations() {
         return reservations;
     }
 
-    // Setter
-
+    /**
+     *
+     * @param room
+     */
     public void addRoom(Room room) {
         rooms.add(room);
         Collections.sort(rooms);
     }
 
+    /**
+     *
+     * @param reservation
+     */
     public void addReservation(Reservation reservation) {
         reservations.add(reservation);
     }
 
-    // Methods
-
+    /**
+     *
+     * @param reservation
+     */
     public void checkinGuest(Reservation reservation) {
         reservation.setStatus(ReservationStatus.CHECKED_IN);
         Log.printColor(Log.GREEN, "\tGuest (" + reservation.getGuest() + ") checked in to Room (" + reservation.getRoom() + ")");
     }
 
+    /**
+     *
+     * @param reservation
+     */
     public void checkoutGuest(Reservation reservation) {
         reservation.getRoom().setStatus(RoomStatus.FREE);
         reservation.getGuest().setStatus((GuestStatus.STAYED));
@@ -54,6 +75,10 @@ public class ReservationManager {
         Log.printColor(Log.RED, "\tGuest (" + reservation.getGuest() + ") checked out from Room (" + reservation.getRoom() + ")");
     }
 
+    /**
+     *
+     * @param gameDate
+     */
     public void generateCheckins(LocalDate gameDate) {
 
         Log.printColor(Log.GREEN_UNDERLINED, "CHECK-INS:");
@@ -74,6 +99,10 @@ public class ReservationManager {
 
     }
 
+    /**
+     *
+     * @param gameDate
+     */
     public void generateCheckouts(LocalDate gameDate) {
 
         Log.printColor(Log.RED_UNDERLINED, "CHECK-OUTS:");
@@ -93,6 +122,12 @@ public class ReservationManager {
 
     }
 
+    /**
+     *
+     * @param size
+     * @param status
+     * @return
+     */
     public ArrayList<Room> subsetRooms(int size, ArrayList<RoomStatus> status) {
 
         ArrayList<Room> subset = new ArrayList<>();
@@ -109,6 +144,12 @@ public class ReservationManager {
 
     }
 
+    /**
+     *
+     * @param size
+     * @param status
+     * @return
+     */
     public ArrayList<String> subsetRoomOptions(int size, ArrayList<RoomStatus> status) {
 
         ArrayList<String> roomOptions = new ArrayList<>();
@@ -121,6 +162,10 @@ public class ReservationManager {
 
     }
 
+    /**
+     *
+     * @return
+     */
     public ArrayList<String> subsetRoomOptions() {
 
         ArrayList<String> roomOptions = new ArrayList<>();
@@ -129,13 +174,16 @@ public class ReservationManager {
             roomOptions.add(String.valueOf(item.getNumber()));
         }
 
-//        rooms.sort();
-
         return roomOptions;
 
     }
 
-    public String roomsString(List<Room> rooms) {
+    /**
+     *
+     * @param rooms
+     * @return
+     */
+    public String roomsToString(List<Room> rooms) {
 
         String s = "";
 
@@ -147,7 +195,11 @@ public class ReservationManager {
 
     }
 
-    public String reservationsString() {
+    /**
+     *
+     * @return
+     */
+    public String reservationsToString() {
 
         String s = "";
 
@@ -165,50 +217,15 @@ public class ReservationManager {
 
     }
 
-    public BigDecimal averageDailyRate(LocalDate gameDate) {
-
-        BigDecimal totalRevenue = new BigDecimal(0);
-        int occupiedRooms = 0;
-
-        for (Reservation item: reservations) {
-            if (item.getStartDate().isBefore(gameDate) || item.getStartDate().isEqual(gameDate)) {
-                if (item.getEndDate().isAfter(gameDate)) {
-                    totalRevenue = totalRevenue.add(item.getRate());
-                    occupiedRooms++;
-                }
-            }
-        }
-
-        if (occupiedRooms > 0) {
-            return totalRevenue.divide(new BigDecimal(occupiedRooms), RoundingMode.DOWN);
-        }
-        else {
-            return new BigDecimal(0);
-        }
-
-    }
-
-    public BigDecimal revenuePerAvailableRoom(LocalDate gameDate) {
-
-        BigDecimal totalRevenue = new BigDecimal(0);
-
-        for (Reservation item: reservations) {
-            if (item.getStartDate().isBefore(gameDate) || item.getStartDate().isEqual(gameDate)) {
-                if (item.getEndDate().isAfter(gameDate)) {
-                    totalRevenue = totalRevenue.add(item.getRate());
-                }
-            }
-        }
-
-        return totalRevenue.divide(new BigDecimal(rooms.size()), RoundingMode.DOWN);
-
-    }
-
+    /**
+     *
+     * @param gameDate
+     */
     public void reservationSummary(LocalDate gameDate) {
         Log.printColor(Log.WHITE_UNDERLINED, "RESERVATION SUMMARY");
-        Log.print("\tOccupancy: " + subsetRooms(0, Room.reservedStatus).size() + "/" + rooms.size() + " (" + subsetRooms(0, Room.reservedStatus).size() / rooms.size()+ "%)");
-        Log.print("\tRevPAR: " + Log.currencyString(revenuePerAvailableRoom(gameDate)));
-        Log.print("\tADR: " + Log.currencyString(averageDailyRate(gameDate)));
+        Log.print("\tOccupancy: " + subsetRooms(0, RoomStatus.reservedStatus).size() + "/" + rooms.size() + " (" + subsetRooms(0, RoomStatus.reservedStatus).size() / rooms.size()+ "%)");
+        Log.print("\tRevPAR: " + Log.currencyString(reservationKPIs.revenuePerAvailableRoom(gameDate, reservations, rooms)));
+        Log.print("\tADR: " + Log.currencyString(reservationKPIs.averageDailyRate(gameDate, reservations)));
     }
 
 }

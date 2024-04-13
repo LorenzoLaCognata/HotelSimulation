@@ -8,8 +8,10 @@ import IO.Log;
 import org.jetbrains.annotations.NotNull;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
 
+/**
+ *
+ */
 public class Room implements Comparable<Room> {
     private final int number;
     private RoomSize size;
@@ -18,16 +20,14 @@ public class Room implements Comparable<Room> {
     private BigDecimal rate;
     private RoomStatus status = RoomStatus.FREE;
 
-    public static final ArrayList<RoomStatus> freeStatus = new ArrayList<>() {
-        {add(RoomStatus.FREE);}
-    };
-
-    public static final ArrayList<RoomStatus> reservedStatus = new ArrayList<>() {
-        {add(RoomStatus.RESERVED);}
-    };
-
-    // Constructor
-
+    /**
+     *
+     * @param number
+     * @param roomSize
+     * @param roomType
+     * @param area
+     * @param rate
+     */
     public Room(int number, RoomSize roomSize, RoomType roomType, int area, BigDecimal rate) {
         this.number = number;
         this.size = roomSize;
@@ -36,28 +36,50 @@ public class Room implements Comparable<Room> {
         this.rate = rate;
     }
 
-    // Getter
-
+    /**
+     *
+     * @return
+     */
     public int getNumber() {
         return number;
     }
 
+    /**
+     *
+     * @return
+     */
     public BigDecimal getRate() {
         return rate;
     }
 
+    /**
+     *
+     * @return
+     */
     public RoomSize getSize() {
         return size;
     }
-    
+
+    /**
+     *
+     * @return
+     */
     public int getArea() {
         return area;
     }
 
+    /**
+     *
+     * @return
+     */
     public RoomStatus getStatus() {
         return status;
     }
 
+    /**
+     *
+     * @return
+     */
     public int getSizeNumber() {
         if (size == RoomSize.SINGLE) {
             return 1;
@@ -76,6 +98,10 @@ public class Room implements Comparable<Room> {
         }
     }
 
+    /**
+     *
+     * @return
+     */
     public int getTypeNumber() {
         if (type == RoomType.STANDARD) {
             return 1;
@@ -97,41 +123,37 @@ public class Room implements Comparable<Room> {
         }
     }
 
-    // Setter
-
+    /**
+     *
+     * @param status
+     */
     public void setStatus(RoomStatus status) {
         this.status = status;
     }
 
+    /**
+     *
+     * @param rate
+     */
     public void setRate(BigDecimal rate) {
         this.rate = rate;
     }
 
+    /**
+     *
+     * @param size
+     */
     public void setSize(RoomSize size) {
         this.size = size;
     }
 
+    /**
+     *
+     * @param type
+     */
     public void setType(RoomType type) {
         this.type = type;
     }
-
-    // Override
-
-    @Override
-    public String toString() {
-        return "Room " + number + " | " + size + " | " + type + " | " + area + " m² | " + Log.currencyString(rate) + " | " + HotelStars.maxHotelStars(type, size, area) + " * | " + status;
-    }
-
-    @Override
-    public int compareTo(@NotNull Room other) {
-
-        int thisNumber = getSizeNumber()*100 + getTypeNumber()*10 + getNumber();
-        int otherNumber = other.getSizeNumber()*100 + other.getTypeNumber()*10 + other.getNumber();
-        return Integer.compare(thisNumber, otherNumber);
-
-    }
-
-    // Methods
 
     /**
      * Minimum allowed area for a room of a specific RoomType, RoomSize and HotelStars
@@ -201,6 +223,20 @@ public class Room implements Comparable<Room> {
                 };
             };
         };
+    }
+
+    @Override
+    public String toString() {
+        return "Room " + number + " | " + size + " | " + type + " | " + area + " m² | " + Log.currencyString(rate) + " | " + HotelStars.hotelStarsRating(type, size, area) + " * | " + status;
+    }
+
+    @Override
+    public int compareTo(@NotNull Room other) {
+
+        int thisNumber = getSizeNumber()*100 + getTypeNumber()*10 + getNumber();
+        int otherNumber = other.getSizeNumber()*100 + other.getTypeNumber()*10 + other.getNumber();
+        return Integer.compare(thisNumber, otherNumber);
+
     }
 
 }

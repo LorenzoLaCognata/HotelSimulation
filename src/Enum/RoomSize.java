@@ -1,11 +1,28 @@
 package Enum;
 
 public enum RoomSize {
+    /**
+     * Single room
+     */
     SINGLE,
+    /**
+     * Double room
+     */
     DOUBLE,
+    /**
+     * Triple room
+     */
     TRIPLE,
+    /**
+     * Quadruple room
+     */
     QUADRUPLE;
 
+    /** Converts a string to a RoomSize
+     *
+     * @param string String to convert
+     * @return RoomSize or null if the string does not match to any RoomSize
+     */
     public static RoomSize parseRoomSize(String string) {
         return switch (string) {
             case "SINGLE" -> SINGLE;
@@ -16,12 +33,12 @@ public enum RoomSize {
         };
     }
 
-    /**
+    /** Maximum RoomSize possible for a certain combination of RoomType, HotelStars and area
      *
-     * @param roomType
-     * @param hotelStars
-     * @param area
-     * @return
+     * @param roomType RoomType of the room
+     * @param hotelStars HotelStars of the room, use ONE in case there is no requirement of maintaining a specific HotelStars level
+     * @param area Area in m² of the room
+     * @return Maximum RoomSize possible for the room
      */
     public static RoomSize maxRoomSize(RoomType roomType, HotelStars hotelStars, int area) {
 

@@ -6,28 +6,42 @@ import IO.Log;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
+/**
+ *
+ */
 public class Transaction {
+
     private final TransactionType transactionType;
     private final LocalDate date;
     private final BigDecimal amount;
 
-    // Constructor
-
+    /**
+     *
+     * @param transactionType
+     * @param date
+     * @param amount
+     */
     public Transaction(TransactionType transactionType, LocalDate date, BigDecimal amount) {
         this.transactionType = transactionType;
         this.date = date;
         this.amount = amount;
     }
 
+    /**
+     *
+     * @return
+     */
     public TransactionType getTransactionType() {
         return transactionType;
     }
 
+    /**
+     *
+     * @return
+     */
     public BigDecimal getAmount() {
         return amount;
     }
-
-    // Override
 
     @Override
     public String toString() {

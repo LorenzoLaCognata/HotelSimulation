@@ -1,16 +1,31 @@
 package Enum;
 
 public enum RoomType {
+    /**
+     * Standard room
+     */
     STANDARD,
+    /**
+     * Superior room
+     */
     SUPERIOR,
+    /**
+     * Deluxe room
+     */
     DELUXE,
+    /**
+     * Junior suite room
+     */
     JUNIOR_SUITE,
+    /**
+     * Suite room
+     */
     SUITE;
 
-    /**
+    /** Converts a string to a RoomType
      *
-     * @param string
-     * @return
+     * @param string String to convert
+     * @return RoomType or null if the string does not match to any RoomType
      */
     public static RoomType parseRoomType(String string) {
         return switch (string) {
@@ -23,10 +38,10 @@ public enum RoomType {
         };
     }
 
-    /**
+    /** Maximum RoomType possible for a certain RoomSize
      *
-     * @param roomSize
-     * @return
+     * @param roomSize RoomSize of the room
+     * @return Maximum RoomType possible for the room
      */
     public static RoomType maxRoomType(RoomSize roomSize) {
 
@@ -38,11 +53,11 @@ public enum RoomType {
         }
     }
 
-    /**
+    /** Maximum RoomType possible for a certain combination of RoomSize and area
      *
-     * @param roomSize
-     * @param area
-     * @return
+     * @param roomSize RoomSize of the room
+     * @param area Area in m² of the room
+     * @return Maximum RoomType possible for the room
      */
     public static RoomType maxRoomType(RoomSize roomSize, int area) {
 

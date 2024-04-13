@@ -9,6 +9,12 @@ import Enum.*;
 import IO.Input;
 import IO.Log;
 
+// OPTIMIZE / REFACTOR!!!
+// SPLIT AND USE MENU PACKAGE
+
+/**
+ *
+ */
 public class SimulationManager {
     private final Hotel hotel = new Hotel();
     private final List<Guest> guests = new ArrayList<>();
@@ -18,22 +24,24 @@ public class SimulationManager {
     private static final Double reservationRate = 0.15;
     private static SetupMode setupMode = SetupMode.AUTOMATIC;
 
-    // Constructor
-
+    /**
+     *
+     */
     public SimulationManager() {
         Log.initLog();
     }
 
-    // Getter
-
-    // Setter
-
+    /**
+     *
+     * @param gameDate
+     */
     public static void setGameDate(LocalDate gameDate) {
         SimulationManager.gameDate = gameDate;
     }
 
-    // Methods
-
+    /**
+     *
+     */
     public void initHotel() {
 
         String hotelSetupString = Input.askQuestion("Hotel Setup: do you want to insert your input", List.of("MANUALLY", "AUTOMATICALLY"), InputType.SINGLE_CHOICE_TEXT);
@@ -63,7 +71,7 @@ public class SimulationManager {
         Log.print("\tAvailable area for your hotel will be " + availableArea + " m²");
 
         BigDecimal rent = new BigDecimal(availableArea).multiply(new BigDecimal(50));
-        hotel.setRent(rent);
+        hotel.financialManager.setRent(rent);
         Log.print("\tRent for your hotel will cost " + Log.currencyString(rent));
         Log.print("");
 
@@ -126,15 +134,18 @@ public class SimulationManager {
         }
 
         Log.printColor(Log.WHITE_UNDERLINED, "ROOMS");
-        Log.print(hotel.reservationManager.roomsString(hotel.reservationManager.getRooms()));
+        Log.print(hotel.reservationManager.roomsToString(hotel.reservationManager.getRooms()));
 
-        hotel.employeeManager.initEmployees();
+        hotel.employeeManager.defaultEmployee();
 
         Log.printColor(Log.CYAN_BACKGROUND, "GAME DATE | " + gameDate);
         Log.print("");
 
     }
 
+    /**
+     *
+     */
     public void mainMenu() {
 
         Log.printColor(Log.WHITE_UNDERLINED, "MAIN MENU");
@@ -158,10 +169,13 @@ public class SimulationManager {
 
     }
 
+    /**
+     *
+     */
     public void roomsMenu() {
 
         Log.printColor(Log.WHITE_UNDERLINED, "ROOMS:");
-        Log.print(hotel.reservationManager.roomsString(hotel.reservationManager.getRooms()));
+        Log.print(hotel.reservationManager.roomsToString(hotel.reservationManager.getRooms()));
 
         String roomsMenuChoice = Input.askQuestion("", List.of("SET RATE", "SET TYPE", "SET SIZE", "BACK"), InputType.SINGLE_CHOICE_TEXT);
 
@@ -180,6 +194,9 @@ public class SimulationManager {
 
     }
 
+    /**
+     *
+     */
     public void roomRateMenu() {
 
         String roomRateMenuChoice = Input.askQuestion("Select a room", hotel.reservationManager.subsetRoomOptions(), InputType.SINGLE_CHOICE_NUMBER);
@@ -197,6 +214,9 @@ public class SimulationManager {
 
     }
 
+    /**
+     *
+     */
     public void roomTypeMenu() {
 
         String roomRateMenuChoice = Input.askQuestion("Select a room", hotel.reservationManager.subsetRoomOptions(), InputType.SINGLE_CHOICE_NUMBER);
@@ -218,6 +238,9 @@ public class SimulationManager {
 
     }
 
+    /**
+     *
+     */
     public void roomSizeMenu() {
 
         String roomRateMenuChoice = Input.askQuestion("Select a room", hotel.reservationManager.subsetRoomOptions(), InputType.SINGLE_CHOICE_NUMBER);
@@ -239,10 +262,13 @@ public class SimulationManager {
 
     }
 
+    /**
+     *
+     */
     public void employeesMenu() {
 
         Log.printColor(Log.WHITE_UNDERLINED, "EMPLOYEES");
-        Log.print(hotel.employeeManager.employeesString());
+        Log.print(hotel.employeeManager.employeesToString());
 
         String employeesMenuChoice = Input.askQuestion("", List.of("SHIFTS", "BACK"), InputType.SINGLE_CHOICE_TEXT);
 
@@ -255,6 +281,9 @@ public class SimulationManager {
 
     }
 
+    /**
+     *
+     */
     public void employeesShiftsMenu() {
 
         String employeesMenuChoice = Input.askQuestion("Select an employee", hotel.employeeManager.employeesQuestionChoices(), InputType.SINGLE_CHOICE_TEXT);
@@ -281,6 +310,10 @@ public class SimulationManager {
 
     }
 
+    /**
+     *
+     * @param days
+     */
     public void simulate(int days) {
 
         for (int i = 0; i < days; i++) {
@@ -290,8 +323,8 @@ public class SimulationManager {
             Log.printColor(Log.CYAN_BACKGROUND, "GAME DATE | " + gameDate + "\n");
 
             if (gameDate.getDayOfMonth() == gameDate.lengthOfMonth()) {
-                hotel.payRent(gameDate);
-                hotel.paySalaries(gameDate);
+                hotel.financialManager.payRent(gameDate);
+                hotel.financialManager.paySalaries(gameDate, hotel.employeeManager.getEmployees());
             }
 
             generateGuests();
@@ -299,14 +332,14 @@ public class SimulationManager {
             hotel.reservationManager.generateCheckouts(gameDate);
 
             Log.printColor(Log.WHITE_UNDERLINED, "ROOMS:");
-            Log.print(hotel.reservationManager.roomsString(hotel.reservationManager.getRooms()));
+            Log.print(hotel.reservationManager.roomsToString(hotel.reservationManager.getRooms()));
 
             generateReservations();
 
             hotel.reservationManager.generateCheckins(gameDate);
 
             Log.printColor(Log.WHITE_UNDERLINED, "ROOMS:");
-            Log.print(hotel.reservationManager.roomsString(hotel.reservationManager.getRooms()));
+            Log.print(hotel.reservationManager.roomsToString(hotel.reservationManager.getRooms()));
 
             hotel.financialManager.financialSummary();
 
@@ -314,6 +347,9 @@ public class SimulationManager {
 
     }
 
+    /**
+     *
+     */
     public void advanceDate() {
 
         setGameDate(gameDate.plusDays(1));
@@ -327,12 +363,15 @@ public class SimulationManager {
         Log.print("");
 
         if (gameDate.getDayOfMonth() == 1) {
-            hotel.payRent(gameDate);
-            hotel.paySalaries(gameDate);
+            hotel.financialManager.payRent(gameDate);
+            hotel.financialManager.paySalaries(gameDate, hotel.employeeManager.getEmployees());
         }
 
     }
 
+    /**
+     *
+     */
     public void generateGuests() {
 
         for (int i = 0; i < 10; i++) {
@@ -351,12 +390,15 @@ public class SimulationManager {
         }
 
         if (setupMode == SetupMode.AUTOMATIC) {
-            printGuests();
+            guestsToString();
         }
 
     }
 
-    public void printGuests() {
+    /**
+     *
+     */
+    public void guestsToString() {
 
         String s = "";
 
@@ -377,6 +419,9 @@ public class SimulationManager {
 
     }
 
+    /**
+     *
+     */
     public void generateReservations() {
 
         if (setupMode == SetupMode.MANUAL) {
@@ -391,8 +436,8 @@ public class SimulationManager {
 
                     Log.print("\t" + guest);
 
-                    ArrayList<Room> rooms = hotel.reservationManager.subsetRooms(guest.getPeople(), Room.freeStatus);
-                    List<String> roomsOptions = hotel.reservationManager.subsetRoomOptions(guest.getPeople(), Room.freeStatus);
+                    ArrayList<Room> rooms = hotel.reservationManager.subsetRooms(guest.getPeople(), RoomStatus.freeStatus);
+                    List<String> roomsOptions = hotel.reservationManager.subsetRoomOptions(guest.getPeople(), RoomStatus.freeStatus);
 
                     if (rooms.isEmpty()) {
                         Log.print("\tThere are no available rooms\n");
@@ -400,7 +445,7 @@ public class SimulationManager {
 
                     else {
                         Log.print("\n\tAvailable Rooms:");
-                        Log.print(hotel.reservationManager.roomsString(rooms));
+                        Log.print(hotel.reservationManager.roomsToString(rooms));
 
                         int roomNumber = Input.parseNumber(Input.askQuestion("\tChoose Room number to assign to", roomsOptions, InputType.SINGLE_CHOICE_NUMBER));
 
@@ -433,17 +478,24 @@ public class SimulationManager {
         }
 
         Log.printColor(Log.BLUE_UNDERLINED, "RESERVATIONS:");
-        Log.printColor(Log.BLUE, hotel.reservationManager.reservationsString());
+        Log.printColor(Log.BLUE, hotel.reservationManager.reservationsToString());
 
     }
 
+    /**
+     *
+     * @param room
+     * @param guest
+     * @param startDate
+     * @param endDate
+     * @param rate
+     */
     public void reserveRoom(Room room, Guest guest, LocalDate startDate, LocalDate endDate, BigDecimal rate) {
         room.setStatus(RoomStatus.RESERVED);
         guest.setStatus(GuestStatus.STAYING);
         Reservation reservation = new Reservation(room, guest, startDate, endDate, rate);
         hotel.reservationManager.addReservation(reservation);
-        hotel.financialManager.addTransaction(new Transaction(TransactionType.RESERVATION, startDate, reservation.calculatePrice()));
+        hotel.financialManager.addTransaction(new Transaction(TransactionType.RESERVATION, startDate, reservation.getPrice()));
     }
-
 
 }

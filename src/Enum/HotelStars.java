@@ -3,20 +3,35 @@ package Enum;
 import Entity.Room;
 
 public enum HotelStars {
+    /**
+     * One-star hotel
+     */
     ONE,
+    /**
+     * Two-stars hotel
+     */
     TWO,
+    /**
+     * Three-stars hotel
+     */
     THREE,
+    /**
+     * Four-stars hotel
+     */
     FOUR,
+    /**
+     * Five-stars hotel
+     */
     FIVE;
 
-    /**
+    /** HotelStars rating assigned to a certain combination of RoomType, RoomSize and area
      *
-     * @param roomType
-     * @param roomSize
-     * @param area
-     * @return
+     * @param roomType RoomType of the room
+     * @param roomSize RoomSize of the room
+     * @param area Area in m² of the room
+     * @return HotelStars assigned to the room
      */
-    public static HotelStars maxHotelStars(RoomType roomType, RoomSize roomSize, int area) {
+    public static HotelStars hotelStarsRating(RoomType roomType, RoomSize roomSize, int area) {
         if (area >= Room.minArea(roomType, roomSize, FIVE)) {
             return FIVE;
         }

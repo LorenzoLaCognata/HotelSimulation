@@ -1,32 +1,70 @@
 package Manager;
 
+import Entity.Employee;
 import Entity.Transaction;
-
 import Enum.TransactionType;
 import IO.Log;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ *
+ */
 public class FinancialManager {
 
+    private BigDecimal rent;
     private BigDecimal balance = new BigDecimal(0);
     private final List<Transaction> transactions = new ArrayList<>();
 
+    /**
+     *
+     * @return
+     */
+    public BigDecimal getRent() {
+        return rent;
+    }
+
+    /**
+     *
+     * @return
+     */
     public BigDecimal getBalance() {
         return balance;
     }
 
+    /**
+     *
+     * @return
+     */
     public List<Transaction> getTransactions() {
         return transactions;
     }
 
+    /**
+     *
+     * @param rent
+     */
+    public void setRent(BigDecimal rent) {
+        this.rent = rent;
+    }
+
+    /**
+     *
+     * @param transaction
+     */
     public void addTransaction(Transaction transaction) {
         transactions.add(transaction);
         balance = balance.add(transaction.getAmount());
     }
 
+    /**
+     *
+     * @param transactionType
+     * @return
+     */
     public BigDecimal getTransactionsAmount(TransactionType transactionType) {
 
         BigDecimal amount = new BigDecimal(0);
@@ -41,6 +79,38 @@ public class FinancialManager {
 
     }
 
+    /**
+     * @param date
+     */
+    public void payRent(LocalDate date) {
+
+        Log.printColor(Log.RED_UNDERLINED, "RENT:");
+
+        addTransaction(new Transaction(TransactionType.RENT, date, rent.negate()));
+        Log.print("\tPaid rent of " + Log.currencyString(rent));
+        Log.print("");
+
+    }
+
+    /**
+     * @param date
+     */
+    public void paySalaries(LocalDate date, List<Employee> employees) {
+
+        Log.printColor(Log.RED_UNDERLINED, "SALARIES:");
+
+        for(Employee item: employees) {
+            addTransaction(new Transaction(TransactionType.SALARY, date, item.getSalary().negate()));
+            Log.print("\tPaid salary of " + Log.currencyString(item.getSalary()) + " to " + item);
+        }
+
+        Log.print("");
+
+    }
+
+    /**
+     *
+     */
     public void financialSummary() {
         Log.printColor(Log.WHITE_UNDERLINED, "FINANCIAL SUMMARY");
         Log.print("\tRevenues: " + Log.currencyString(getTransactionsAmount(TransactionType.RESERVATION)));

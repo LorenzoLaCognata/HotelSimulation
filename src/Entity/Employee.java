@@ -6,38 +6,56 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ *
+ */
 public class Employee {
+
     private final String name;
     private final EmployeeRole role;
     private final BigDecimal salary;
     private final List<Shift> shifts = new ArrayList<>();
 
-    // Constructor
-
+    /**
+     *
+     * @param name
+     * @param role
+     * @param salary
+     */
     public Employee(String name, EmployeeRole role, BigDecimal salary) {
         this.name = name;
         this.role = role;
         this.salary = salary;
     }
 
-    // Getter
-
+    /**
+     *
+     * @return
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     *
+     * @return
+     */
     public BigDecimal getSalary() {
         return salary;
     }
 
-    // Setter
-
+    /**
+     *
+     * @param shift
+     */
     public void addShift(Shift shift) {
         shifts.add(shift);
     }
 
-    // Methods
-
+    /**
+     *
+     * @return
+     */
     public String toShiftsString() {
 
         String s = "";
@@ -62,4 +80,3 @@ public class Employee {
     }
 
 }
-
