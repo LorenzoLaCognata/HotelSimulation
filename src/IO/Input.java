@@ -13,15 +13,23 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Scanner;
 
+/**
+ *
+ */
 public class Input {
 
     private static final Scanner scanner = new Scanner(System.in);
 
-    public static String getLetter(int value) {
+    private static String getLetter(int value) {
         char letter = (char) ('A' + value);
         return String.valueOf(letter);
     }
 
+    /**
+     *
+     * @param string
+     * @return
+     */
     public static Integer parseNumber(String string) {
         try {
             return Integer.parseInt(string);
@@ -30,6 +38,11 @@ public class Input {
         }
     }
 
+    /**
+     *
+     * @param string
+     * @return
+     */
     public static LocalTime parseTime(String string) {
         try {
             return LocalTime.parse(string, DateTimeFormatter.ofPattern("HH:mm", Locale.getDefault()));
@@ -67,6 +80,13 @@ public class Input {
         return questionOptions;
     }
 
+    /**
+     *
+     * @param question
+     * @param options
+     * @param inputType
+     * @return
+     */
     public static String askQuestion(String question, List<String> options, InputType inputType) {
 
         String answer = "";
@@ -108,6 +128,13 @@ public class Input {
 
     }
 
+    /**
+     *
+     * @param question
+     * @param minNumber
+     * @param maxNumber
+     * @return
+     */
     public static int askQuestion(String question, int minNumber, int maxNumber) {
 
         String inputString;
@@ -140,6 +167,12 @@ public class Input {
 
     }
 
+    /**
+     *
+     * @param question
+     * @param inputType
+     * @return
+     */
     public static String askQuestion(String question, InputType inputType) {
 
         String answer = "";

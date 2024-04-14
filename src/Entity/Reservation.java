@@ -107,7 +107,7 @@ public class Reservation {
 
     @Override
     public String toString() {
-        return "Reservation | From " + startDate + " | To " + endDate + " | " + Log.currencyString(getRate()) + " x " + getNights() + " = " + Log.currencyString(getPrice()) + " | GUEST (" + guest + ") | ROOM (" + room + ")";
+        return "Reservation | From " + startDate + " | To " + endDate + " | " + Log.currencyToString(getRate()) + " x " + getNights() + " = " + Log.currencyToString(getPrice()) + " | GUEST (" + guest + ") | ROOM (" + room + ")";
     }
 
 }

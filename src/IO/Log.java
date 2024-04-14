@@ -6,18 +6,32 @@ import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
 import java.util.Locale;
 
+/**
+ *
+ */
 public class Log {
 
     private static final DecimalFormat currency = (DecimalFormat) NumberFormat.getCurrencyInstance(Locale.ITALY);
 
-    // Reset
+    /**
+     *
+     */
     public static final String RESET = "\033[0m";  // Text Reset
 
     // Regular Colors
 //    public static final String BLACK = "\033[0;30m";   // BLACK
+    /**
+     *
+     */
     public static final String RED = "\033[0;31m";     // RED
+    /**
+     *
+     */
     public static final String GREEN = "\033[0;32m";   // GREEN
 //    public static final String YELLOW = "\033[0;33m";  // YELLOW
+    /**
+     *
+     */
     public static final String BLUE = "\033[0;34m";    // BLUE
 //    public static final String PURPLE = "\033[0;35m";  // PURPLE
 //    public static final String CYAN = "\033[0;36m";    // CYAN
@@ -35,12 +49,24 @@ public class Log {
 
     // Underline
 //    public static final String BLACK_UNDERLINED = "\033[4;30m";  // BLACK
+    /**
+     *
+     */
     public static final String RED_UNDERLINED = "\033[4;31m";    // RED
+    /**
+     *
+     */
     public static final String GREEN_UNDERLINED = "\033[4;32m";  // GREEN
 //    public static final String YELLOW_UNDERLINED = "\033[4;33m"; // YELLOW
+    /**
+     *
+     */
     public static final String BLUE_UNDERLINED = "\033[4;34m";   // BLUE
 //    public static final String PURPLE_UNDERLINED = "\033[4;35m"; // PURPLE
 //    public static final String CYAN_UNDERLINED = "\033[4;36m";   // CYAN
+    /**
+     *
+     */
     public static final String WHITE_UNDERLINED = "\033[4;37m";  // WHITE
 
     // Background
@@ -50,6 +76,9 @@ public class Log {
 //    public static final String YELLOW_BACKGROUND = "\033[43m"; // YELLOW
 //    public static final String BLUE_BACKGROUND = "\033[44m";   // BLUE
 //    public static final String PURPLE_BACKGROUND = "\033[45m"; // PURPLE
+    /**
+     *
+     */
     public static final String CYAN_BACKGROUND = "\033[46m";   // CYAN
 //    public static final String WHITE_BACKGROUND = "\033[47m";  // WHITE
 
@@ -83,6 +112,9 @@ public class Log {
 //    public static final String CYAN_BACKGROUND_BRIGHT = "\033[0;106m";  // CYAN
 //    public static final String WHITE_BACKGROUND_BRIGHT = "\033[0;107m";   // WHITE
 
+    /**
+     *
+     */
     public static void initLog() {
 
         DecimalFormatSymbols formatSymbols = currency.getDecimalFormatSymbols();
@@ -97,15 +129,29 @@ public class Log {
 
     }
 
+    /**
+     *
+     * @param text
+     */
     public static void print(String text) {
         System.out.println(text);
     }
 
+    /**
+     *
+     * @param color
+     * @param text
+     */
     public static void printColor(String color, String text) {
         System.out.println(color + text + RESET);
     }
 
-    public static String currencyString(BigDecimal amount) {
+    /**
+     *
+     * @param amount
+     * @return
+     */
+    public static String currencyToString(BigDecimal amount) {
         return currency.format(amount);
     }
 

@@ -23,14 +23,6 @@ public class FinancialManager {
      *
      * @return
      */
-    public BigDecimal getRent() {
-        return rent;
-    }
-
-    /**
-     *
-     * @return
-     */
     public BigDecimal getBalance() {
         return balance;
     }
@@ -87,7 +79,7 @@ public class FinancialManager {
         Log.printColor(Log.RED_UNDERLINED, "RENT:");
 
         addTransaction(new Transaction(TransactionType.RENT, date, rent.negate()));
-        Log.print("\tPaid rent of " + Log.currencyString(rent));
+        Log.print("\tPaid rent of " + Log.currencyToString(rent));
         Log.print("");
 
     }
@@ -101,7 +93,7 @@ public class FinancialManager {
 
         for(Employee item: employees) {
             addTransaction(new Transaction(TransactionType.SALARY, date, item.getSalary().negate()));
-            Log.print("\tPaid salary of " + Log.currencyString(item.getSalary()) + " to " + item);
+            Log.print("\tPaid salary of " + Log.currencyToString(item.getSalary()) + " to " + item);
         }
 
         Log.print("");
@@ -113,10 +105,10 @@ public class FinancialManager {
      */
     public void financialSummary() {
         Log.printColor(Log.WHITE_UNDERLINED, "FINANCIAL SUMMARY");
-        Log.print("\tRevenues: " + Log.currencyString(getTransactionsAmount(TransactionType.RESERVATION)));
-        Log.print("\tRent: " + Log.currencyString(getTransactionsAmount(TransactionType.RENT)));
-        Log.print("\tSalaries: " + Log.currencyString(getTransactionsAmount(TransactionType.SALARY)));
-        Log.print("\tBalance: " + Log.currencyString(getBalance()));
+        Log.print("\tRevenues: " + Log.currencyToString(getTransactionsAmount(TransactionType.RESERVATION)));
+        Log.print("\tRent: " + Log.currencyToString(getTransactionsAmount(TransactionType.RENT)));
+        Log.print("\tSalaries: " + Log.currencyToString(getTransactionsAmount(TransactionType.SALARY)));
+        Log.print("\tBalance: " + Log.currencyToString(getBalance()));
     }
 
 }

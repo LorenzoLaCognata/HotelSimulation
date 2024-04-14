@@ -45,7 +45,7 @@ public class Transaction {
 
     @Override
     public String toString() {
-        return "Transaction | " + transactionType + " | " + date + " | " + Log.currencyString(amount);
+        return "Transaction | " + transactionType + " | " + date + " | " + Log.currencyToString(amount);
     }
 
 }

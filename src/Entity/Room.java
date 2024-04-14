@@ -227,7 +227,7 @@ public class Room implements Comparable<Room> {
 
     @Override
     public String toString() {
-        return "Room " + number + " | " + size + " | " + type + " | " + area + " m² | " + Log.currencyString(rate) + " | " + HotelStars.hotelStarsRating(type, size, area) + " * | " + status;
+        return "Room " + number + " | " + size + " | " + type + " | " + area + " m² | " + Log.currencyToString(rate) + " | " + HotelStars.hotelStarsRating(type, size, area) + " * | " + status;
     }
 
     @Override

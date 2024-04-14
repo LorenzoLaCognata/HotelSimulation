@@ -1,13 +1,20 @@
 package Manager;
 
+import Entity.Guest;
+import Entity.Transaction;
+import IO.Input;
 import KPIs.ReservationKPIs;
 import Entity.Reservation;
 import Entity.Room;
 import Enum.ReservationStatus;
 import Enum.RoomStatus;
 import Enum.GuestStatus;
+import Enum.SetupMode;
+import Enum.InputType;
+import Enum.TransactionType;
 import IO.Log;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -124,6 +131,85 @@ public class ReservationManager {
 
     /**
      *
+     * @param room
+     * @param guest
+     * @param startDate
+     * @param endDate
+     * @param rate
+     */
+    public void reserveRoom(Room room, Guest guest, LocalDate startDate, LocalDate endDate, BigDecimal rate, FinancialManager financialManager) {
+        room.setStatus(RoomStatus.RESERVED);
+        guest.setStatus(GuestStatus.STAYING);
+        Reservation reservation = new Reservation(room, guest, startDate, endDate, rate);
+        addReservation(reservation);
+        financialManager.addTransaction(new Transaction(TransactionType.RESERVATION, startDate, reservation.getPrice()));
+    }
+
+    /**
+     *
+     */
+    public void generateReservations(SetupMode setupMode, LocalDate gameDate, List<Guest> guests, FinancialManager financialManager) {
+
+        if (setupMode == SetupMode.MANUAL) {
+            Log.printColor(Log.WHITE_UNDERLINED, "GUESTS:");
+        }
+
+        for(Guest guest: guests) {
+
+            if (guest.getStatus() == GuestStatus.WAITING) {
+
+                if (setupMode == SetupMode.MANUAL) {
+
+                    Log.print("\t" + guest);
+
+                    ArrayList<Room> rooms = subsetRooms(guest.getPeople(), RoomStatus.freeStatus);
+                    List<String> roomsOptions = subsetRoomOptions(guest.getPeople(), RoomStatus.freeStatus);
+
+                    if (rooms.isEmpty()) {
+                        Log.print("\tThere are no available rooms\n");
+                    }
+
+                    else {
+                        Log.print("\n\tAvailable Rooms:");
+                        Log.print(roomsToString(rooms));
+
+                        int roomNumber = Input.parseNumber(Input.askQuestion("\tChoose Room number to assign to", roomsOptions, InputType.SINGLE_CHOICE_NUMBER));
+
+                        boolean roomFound = false;
+                        for (Room room : rooms) {
+                            if (!roomFound && room.getStatus() == RoomStatus.FREE && room.getNumber() == roomNumber) {
+                                roomFound = true;
+                                reserveRoom(room, guest, gameDate, gameDate.plusDays(guest.getNights()), room.getRate(), financialManager);
+                            }
+                        }
+                    }
+                }
+
+                else {
+                    boolean roomFound = false;
+                    for (int size = guest.getPeople(); size <= 4; size++) {
+                        for (Room room : getRooms()) {
+                            if (!roomFound && room.getStatus() == RoomStatus.FREE && room.getSizeNumber() == size) {
+                                roomFound = true;
+                                reserveRoom(room, guest, gameDate, gameDate.plusDays(guest.getNights()), room.getRate(), financialManager);
+                            }
+                        }
+                    }
+
+                    if (!roomFound) {
+                        guest.setStatus(GuestStatus.LOST);
+                    }
+                }
+            }
+        }
+
+        Log.printColor(Log.BLUE_UNDERLINED, "RESERVATIONS:");
+        Log.printColor(Log.BLUE, reservationsToString());
+
+    }
+
+    /**
+     *
      * @param size
      * @param status
      * @return
@@ -224,8 +310,8 @@ public class ReservationManager {
     public void reservationSummary(LocalDate gameDate) {
         Log.printColor(Log.WHITE_UNDERLINED, "RESERVATION SUMMARY");
         Log.print("\tOccupancy: " + subsetRooms(0, RoomStatus.reservedStatus).size() + "/" + rooms.size() + " (" + subsetRooms(0, RoomStatus.reservedStatus).size() / rooms.size()+ "%)");
-        Log.print("\tRevPAR: " + Log.currencyString(reservationKPIs.revenuePerAvailableRoom(gameDate, reservations, rooms)));
-        Log.print("\tADR: " + Log.currencyString(reservationKPIs.averageDailyRate(gameDate, reservations)));
+        Log.print("\tRevPAR: " + Log.currencyToString(reservationKPIs.revenuePerAvailableRoom(gameDate, reservations, rooms)));
+        Log.print("\tADR: " + Log.currencyToString(reservationKPIs.averageDailyRate(gameDate, reservations)));
     }
 
 }
