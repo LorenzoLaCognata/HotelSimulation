@@ -1,5 +1,8 @@
 package Enum;
 
+/**
+ * Type of room from standard rooms to suites
+ */
 public enum RoomType {
     /**
      * Standard room

@@ -1,5 +1,8 @@
 package Enum;
 
+/**
+ * Type of financial transaction
+ */
 public enum TransactionType {
     /**
      * Reservation revenues

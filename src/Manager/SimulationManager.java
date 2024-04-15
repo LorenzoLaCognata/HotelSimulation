@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.Random;
 
 /**
- *
+ * Manage the hotel simulation part
  */
 public class SimulationManager {
 
@@ -25,13 +25,13 @@ public class SimulationManager {
     private final RoomsMenu roomsMenu = new RoomsMenu();
     private final EmployeesMenu employeesMenu = new EmployeesMenu();
 
+    private SetupMode setupMode = SetupMode.AUTOMATIC;
+    private LocalDate gameDate = LocalDate.of (2024,1,1);
     private static final Random random = new Random();
-    private static LocalDate gameDate = LocalDate.of (2024,1,1);
     private static final Double reservationRate = 0.15;
-    private static SetupMode setupMode = SetupMode.AUTOMATIC;
 
     /**
-     *
+     * Constructor, initializing the log, asking for the SetupMode and initialiting the hotel
      */
     public SimulationManager() {
 
@@ -44,18 +44,21 @@ public class SimulationManager {
         }
 
         hotel.initHotel(setupMode, gameDate, random);
+
+        generateGuests();
+
     }
 
     /**
-     *
-     * @param gameDate
+     * Sets the game date
+     * @param gameDate Date to set the Game Date to
      */
-    public static void setGameDate(LocalDate gameDate) {
-        SimulationManager.gameDate = gameDate;
+    public void setGameDate(LocalDate gameDate) {
+        this.gameDate = gameDate;
     }
 
     /**
-     *
+     * Collects user input from the main menu and executes the appropriate sub-menu
      */
     public void mainMenu() {
 
@@ -63,9 +66,7 @@ public class SimulationManager {
         String mainMenuChoice = Input.askQuestion("", List.of("GUESTS", "ROOMS", "EMPLOYEES", "ADVANCE DATE", "QUIT"), InputType.SINGLE_CHOICE_TEXT);
 
         if (mainMenuChoice.equalsIgnoreCase("GUESTS")) {
-            Log.print("Page under construction (note: RESERVATIONS, CHECK-INS, CHECK-OUTS)");
-            Log.print("");
-            mainMenu();
+            guestsMenuChoice();
         }
         else if (mainMenuChoice.equalsIgnoreCase("ROOMS")) {
             roomsMenuChoice();
@@ -84,7 +85,35 @@ public class SimulationManager {
     }
 
     /**
-     *
+     * Collects user input from the guests menu and executes the appropriate sub-menu
+     */
+    private void guestsMenuChoice() {
+
+        Log.printColor(Log.WHITE_UNDERLINED, "GUESTS:");
+        Log.print(guestsToString());
+
+        String roomsMenuChoice = Input.askQuestion("", List.of("RESERVATIONS", "CHECK-INS", "CHECK-OUTS", "BACK"), InputType.SINGLE_CHOICE_TEXT);
+
+        if (roomsMenuChoice.equalsIgnoreCase("BACK")) {
+            mainMenu();
+        }
+        else if (roomsMenuChoice.equalsIgnoreCase("RESERVATIONS")) {
+            //guestsMenu.guestReservationsMenuChoice();
+            guestsMenuChoice();
+        }
+        else if (roomsMenuChoice.equalsIgnoreCase("CHECK-INS")) {
+            //guestsMenu.guestCheckInsMenuChoice();
+            guestsMenuChoice();
+        }
+        else if (roomsMenuChoice.equalsIgnoreCase("CHECK-OUTS")) {
+            //guestsMenu.guestCheckOutsMenuChoice();
+            guestsMenuChoice();
+        }
+
+    }
+
+    /**
+     * Collects user input from the rooms menu and executes the appropriate sub-menu
      */
     public void roomsMenuChoice() {
 
@@ -112,7 +141,7 @@ public class SimulationManager {
     }
 
     /**
-     *
+     * Collects user input from the employees menu and executes the appropriate sub-menu
      */
     public void employeesMenuChoice() {
 
@@ -132,8 +161,8 @@ public class SimulationManager {
     }
 
     /**
-     *
-     * @param days
+     * Advance the Game Date by a certain amount of dates simulating all the events for those days
+     * @param days Number of days to simulate
      */
     public void simulate(int days) {
 
@@ -169,13 +198,9 @@ public class SimulationManager {
     }
 
     /**
-     *
+     * Executing end-of-day routines and advancing the Game Date by one day
      */
     public void advanceDate() {
-
-        setGameDate(gameDate.plusDays(1));
-        Log.printColor(Log.CYAN_BACKGROUND, "GAME DATE | " + gameDate);
-        Log.print("");
 
         hotel.financialManager.financialSummary();
         Log.print("");
@@ -183,15 +208,21 @@ public class SimulationManager {
         hotel.reservationManager.reservationSummary(gameDate);
         Log.print("");
 
+        setGameDate(gameDate.plusDays(1));
+        Log.printColor(Log.CYAN_BACKGROUND, "GAME DATE | " + gameDate);
+        Log.print("");
+
         if (gameDate.getDayOfMonth() == 1) {
             hotel.financialManager.payRent(gameDate);
             hotel.financialManager.paySalaries(gameDate, hotel.employeeManager.getEmployees());
         }
 
+        generateGuests();
+
     }
 
     /**
-     *
+     * Randomly generate guests with Start Date on the current date
      */
     public void generateGuests() {
 
@@ -211,15 +242,13 @@ public class SimulationManager {
         }
 
         if (setupMode == SetupMode.AUTOMATIC) {
-            guestsToString();
+            Log.printColor(Log.WHITE_UNDERLINED, "GUESTS");
+            Log.print(guestsToString());
         }
 
     }
 
-    /**
-     *
-     */
-    public void guestsToString() {
+    private String guestsToString() {
 
         String s = "";
 
@@ -229,14 +258,7 @@ public class SimulationManager {
             }
         }
 
-        Log.printColor(Log.WHITE_UNDERLINED, "GUESTS:");
-
-        if (!s.isEmpty()) {
-            Log.print(s);
-        }
-        else {
-            Log.print("\t-\n");
-        }
+        return s;
 
     }
 

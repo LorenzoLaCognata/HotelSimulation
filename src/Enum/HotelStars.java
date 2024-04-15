@@ -2,6 +2,9 @@ package Enum;
 
 import Entity.Room;
 
+/**
+ * Number of stars for hotels and its rooms and services
+ */
 public enum HotelStars {
     /**
      * One-star hotel

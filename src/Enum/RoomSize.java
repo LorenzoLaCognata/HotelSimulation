@@ -1,5 +1,8 @@
 package Enum;
 
+/**
+ * Size of the room in terms of number of guests that it can accomodate
+ */
 public enum RoomSize {
     /**
      * Single room

@@ -1,7 +1,7 @@
 package Enum;
 
 /**
- *
+ * Type of input expected when asking for user input with a question
  */
 public enum InputType {
     /**

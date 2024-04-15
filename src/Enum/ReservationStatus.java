@@ -1,5 +1,8 @@
 package Enum;
 
+/**
+ * Status of a reservation for a room
+ */
 public enum ReservationStatus {
     /**
      * Confirmed reservation

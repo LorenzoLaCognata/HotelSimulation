@@ -162,21 +162,21 @@ public class ReservationManager {
 
                     Log.print("\t" + guest);
 
-                    ArrayList<Room> rooms = subsetRooms(guest.getPeople(), RoomStatus.freeStatus);
+                    ArrayList<Room> freeRooms = subsetRooms(guest.getPeople(), RoomStatus.freeStatus);
                     List<String> roomsOptions = subsetRoomOptions(guest.getPeople(), RoomStatus.freeStatus);
 
-                    if (rooms.isEmpty()) {
+                    if (freeRooms.isEmpty()) {
                         Log.print("\tThere are no available rooms\n");
                     }
 
                     else {
                         Log.print("\n\tAvailable Rooms:");
-                        Log.print(roomsToString(rooms));
+                        Log.print(roomsToString(freeRooms));
 
                         int roomNumber = Input.parseNumber(Input.askQuestion("\tChoose Room number to assign to", roomsOptions, InputType.SINGLE_CHOICE_NUMBER));
 
                         boolean roomFound = false;
-                        for (Room room : rooms) {
+                        for (Room room : freeRooms) {
                             if (!roomFound && room.getStatus() == RoomStatus.FREE && room.getNumber() == roomNumber) {
                                 roomFound = true;
                                 reserveRoom(room, guest, gameDate, gameDate.plusDays(guest.getNights()), room.getRate(), financialManager);
@@ -188,7 +188,7 @@ public class ReservationManager {
                 else {
                     boolean roomFound = false;
                     for (int size = guest.getPeople(); size <= 4; size++) {
-                        for (Room room : getRooms()) {
+                        for (Room room : rooms) {
                             if (!roomFound && room.getStatus() == RoomStatus.FREE && room.getSizeNumber() == size) {
                                 roomFound = true;
                                 reserveRoom(room, guest, gameDate, gameDate.plusDays(guest.getNights()), room.getRate(), financialManager);

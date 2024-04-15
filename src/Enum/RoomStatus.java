@@ -2,6 +2,9 @@ package Enum;
 
 import java.util.ArrayList;
 
+/**
+ * Reservation status of a room
+ */
 public enum RoomStatus {
     /**
      * Room that is not reserved by any guest

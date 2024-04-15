@@ -1,5 +1,8 @@
 package Enum;
 
+/**
+ * Status for a guest and his hotel reservation
+ */
 public enum GuestStatus {
     /**
      * Guest that is waiting to make a hotel reservation

@@ -1,5 +1,8 @@
 package Enum;
 
+/**
+ * Job roles for employees
+ */
 public enum EmployeeRole {
 //    FRONT_DESK_AGENT,
 //    CONCIERGE,
