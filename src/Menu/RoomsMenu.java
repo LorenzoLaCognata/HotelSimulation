@@ -22,11 +22,11 @@ public class RoomsMenu {
      */
     public void roomSizeMenuChoice(ReservationManager reservationManager) {
 
-        String roomRateMenuChoice = Input.askQuestion("Select a room", reservationManager.subsetRoomOptions(), InputType.SINGLE_CHOICE_NUMBER);
+        String roomSizeChoice = Input.askQuestion("Select a room", reservationManager.subsetRoomOptions(), InputType.SINGLE_CHOICE_NUMBER);
 
         for (Room item: reservationManager.getRooms()) {
 
-            if (String.valueOf(item.getNumber()).equalsIgnoreCase(roomRateMenuChoice)) {
+            if (String.valueOf(item.getNumber()).equalsIgnoreCase(roomSizeChoice)) {
 
                 List<String> questionOptions = Input.roomSizeOptions(RoomSize.maxRoomSize(RoomType.STANDARD, HotelStars.ONE, item.getArea()));
                 String answer = Input.askQuestion("Choose the size for this room", questionOptions, InputType.SINGLE_CHOICE_TEXT);
@@ -45,10 +45,10 @@ public class RoomsMenu {
      */
     public void roomRateMenuChoice(ReservationManager reservationManager) {
 
-        String roomRateMenuChoice = Input.askQuestion("Select a room", reservationManager.subsetRoomOptions(), InputType.SINGLE_CHOICE_NUMBER);
+        String roomRateChoice = Input.askQuestion("Select a room", reservationManager.subsetRoomOptions(), InputType.SINGLE_CHOICE_NUMBER);
 
         for (Room item: reservationManager.getRooms()) {
-            if (String.valueOf(item.getNumber()).equalsIgnoreCase(roomRateMenuChoice)) {
+            if (String.valueOf(item.getNumber()).equalsIgnoreCase(roomRateChoice)) {
 
                 BigDecimal rate = new BigDecimal(Input.askQuestion("Choose the daily rate in € for this room", 0, Integer.MAX_VALUE));
                 item.setRate(rate);

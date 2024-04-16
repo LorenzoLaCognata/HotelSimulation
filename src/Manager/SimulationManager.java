@@ -2,12 +2,14 @@ package Manager;
 
 import Entity.Guest;
 import Entity.Hotel;
+import Entity.Room;
 import Enum.GuestStatus;
 import Enum.InputType;
 import Enum.SetupMode;
 import IO.Input;
 import IO.Log;
 import Menu.EmployeesMenu;
+import Menu.GuestsMenu;
 import Menu.RoomsMenu;
 
 import java.time.LocalDate;
@@ -22,6 +24,7 @@ public class SimulationManager {
 
     private final Hotel hotel = new Hotel();
     private final List<Guest> guests = new ArrayList<>();
+    private final GuestsMenu guestsMenu = new GuestsMenu();
     private final RoomsMenu roomsMenu = new RoomsMenu();
     private final EmployeesMenu employeesMenu = new EmployeesMenu();
 
@@ -47,6 +50,14 @@ public class SimulationManager {
 
         generateGuests();
 
+    }
+
+    /**
+     * Returns the game date
+     * @return Game Date
+     */
+    public LocalDate getGameDate() {
+        return gameDate;
     }
 
     /**
@@ -98,13 +109,25 @@ public class SimulationManager {
             mainMenu();
         }
         else if (roomsMenuChoice.equalsIgnoreCase("RESERVATIONS")) {
-            //guestsMenu.guestReservationsMenuChoice();
+
+            List<Guest> waitingGuests = subsetGuests(Integer.MAX_VALUE, GuestStatus.waitingStatus);
+
+            if (waitingGuests.isEmpty()) {
+                Log.print("There are no waiting guests\n");
+            }
+
+            else {
+                guestsMenu.guestReservationsMenuChoice(guests, this, hotel.reservationManager, hotel.financialManager);
+            }
+
             guestsMenuChoice();
         }
+
         else if (roomsMenuChoice.equalsIgnoreCase("CHECK-INS")) {
             //guestsMenu.guestCheckInsMenuChoice();
             guestsMenuChoice();
         }
+
         else if (roomsMenuChoice.equalsIgnoreCase("CHECK-OUTS")) {
             //guestsMenu.guestCheckOutsMenuChoice();
             guestsMenuChoice();
@@ -245,6 +268,62 @@ public class SimulationManager {
             Log.printColor(Log.WHITE_UNDERLINED, "GUESTS");
             Log.print(guestsToString());
         }
+
+    }
+
+    /**
+     *
+     * @param maxPeople
+     * @param status
+     * @return
+     */
+    public ArrayList<Guest> subsetGuests(int maxPeople, ArrayList<GuestStatus> status) {
+
+        ArrayList<Guest> subset = new ArrayList<>();
+
+        for(Guest item: guests) {
+            if (item.getPeople() <= maxPeople) {
+                if (status.isEmpty() || status.contains(item.getStatus())) {
+                    subset.add(item);
+                }
+            }
+        }
+
+        return subset;
+
+    }
+
+    /**
+     *
+     * @param maxPeople
+     * @param status
+     * @return
+     */
+    public ArrayList<String> subsetGuestOptions(int maxPeople, ArrayList<GuestStatus> status) {
+
+        ArrayList<String> GuestOptions = new ArrayList<>();
+
+        for(Guest item: subsetGuests(maxPeople, status)) {
+            GuestOptions.add(String.valueOf(item.getNumber()));
+        }
+
+        return GuestOptions;
+
+    }
+
+    /**
+     *
+     * @return
+     */
+    public ArrayList<String> subsetGuestOptions() {
+
+        ArrayList<String> GuestOptions = new ArrayList<>();
+
+        for(Guest item: guests) {
+            GuestOptions.add(String.valueOf(item.getNumber()));
+        }
+
+        return GuestOptions;
 
     }
 
