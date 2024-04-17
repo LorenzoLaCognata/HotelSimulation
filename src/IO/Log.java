@@ -1,5 +1,9 @@
 package IO;
 
+import javax.swing.*;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.*;
+import java.awt.*;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
@@ -12,6 +16,10 @@ import java.util.Locale;
 public class Log {
 
     private static final DecimalFormat currency = (DecimalFormat) NumberFormat.getCurrencyInstance(Locale.ITALY);
+
+    private static final JTextPane textPane = new JTextPane();
+    private static final Document document = textPane.getStyledDocument();
+    private static SimpleAttributeSet set = new SimpleAttributeSet();
 
     /**
      *
@@ -112,6 +120,10 @@ public class Log {
 //    public static final String CYAN_BACKGROUND_BRIGHT = "\033[0;106m";  // CYAN
 //    public static final String WHITE_BACKGROUND_BRIGHT = "\033[0;107m";   // WHITE
 
+    public static JTextPane getTextPane() {
+        return textPane;
+    }
+
     /**
      *
      */
@@ -125,6 +137,8 @@ public class Log {
         currency.setMinimumFractionDigits(2);
         currency.setMaximumFractionDigits(2);
 
+        textPane.setMargin( new Insets(10,10,10,10) ); // tt is JTextArea instance
+
         Log.print("\nWelcome to Hotel Simulation!\n");
 
     }
@@ -134,7 +148,17 @@ public class Log {
      * @param text
      */
     public static void print(String text) {
-        System.out.println(text);
+
+        set = new SimpleAttributeSet();
+        textPane.setCharacterAttributes(set, true);
+
+        try {
+            document.insertString(document.getLength(), text + "\n", set);
+        } catch (BadLocationException e) {
+            throw new RuntimeException(e);
+        }
+
+        textPane.setCaretPosition(textPane.getDocument().getLength());
     }
 
     /**
@@ -142,8 +166,19 @@ public class Log {
      * @param color
      * @param text
      */
-    public static void printColor(String color, String text) {
-        System.out.println(color + text + RESET);
+    public static void printColor(Color color, String text) {
+
+        set = new SimpleAttributeSet();
+        StyleConstants.setForeground(set, color);
+        textPane.setCharacterAttributes(set, true);
+
+        try {
+            document.insertString(document.getLength(), text + "\n", set);
+        } catch (BadLocationException e) {
+            throw new RuntimeException(e);
+        }
+
+        textPane.setCaretPosition(textPane.getDocument().getLength());
     }
 
     /**

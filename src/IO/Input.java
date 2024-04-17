@@ -5,20 +5,47 @@ import Enum.RoomSize;
 import Enum.RoomType;
 import Entity.TimePeriod;
 
+import java.awt.*;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-import java.util.Scanner;
 
 /**
  *
  */
 public class Input {
 
-    private static final Scanner scanner = new Scanner(System.in);
+    private static final TextField textField = new TextField();
+    private static volatile boolean input = false;
+
+    /**
+     *
+     * @return
+     */
+    public static TextField getTextField() {
+        return textField;
+    }
+
+    /**
+     *
+     * @return
+     */
+    public static boolean isInput() {
+        return input;
+    }
+
+    /**
+     *
+     * @param input
+     */
+    public static void setInput(boolean input) {
+        Input.input = input;
+    }
+
+
 
     private static String getLetter(int value) {
         char letter = (char) ('A' + value);
@@ -98,12 +125,19 @@ public class Input {
         while (!validAnswer) {
 
             if (answerCounter > 0) {
-                Log.printColor(Log.RED, "Error! Answer not valid!");
+                Log.printColor(Color.RED, "Error! Answer not valid!");
             }
 
             Log.print(questionOptionsString(question, options, inputType));
 
-            inputString = scanner.nextLine();
+            while (!input) {
+                Thread.onSpinWait();
+            }
+
+            inputString = textField.getText();
+            textField.setText("");
+            input = false;
+
             answerCounter++;
             Log.print("");
 
@@ -146,12 +180,14 @@ public class Input {
         while (!validAnswer) {
 
             if (answerCounter > 0) {
-                Log.printColor(Log.RED, "Error! Answer not valid!");
+                Log.printColor(Color.RED, "Error! Answer not valid!");
             }
 
             Log.print(question);
 
-            inputString = scanner.nextLine();
+            inputString = textField.getText();
+            textField.setText("");
+            input = false;
             answerCounter++;
             Log.print("");
 
@@ -186,12 +222,14 @@ public class Input {
             while (!validAnswer) {
 
                 if (answerCounter > 0) {
-                    Log.printColor(Log.RED, "Error! Answer not valid!");
+                    Log.printColor(Color.RED, "Error! Answer not valid!");
                 }
 
                 Log.print(question);
 
-                inputString = scanner.nextLine();
+                inputString = textField.getText();
+                textField.setText("");
+                input = false;
                 answerCounter++;
                 Log.print("");
 
@@ -215,7 +253,9 @@ public class Input {
 
         else {
             Log.print(question);
-            inputString = scanner.nextLine();
+            inputString = textField.getText();
+            textField.setText("");
+            input = false;
             Log.print("");
             answer = inputString;
         }

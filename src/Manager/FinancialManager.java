@@ -5,6 +5,7 @@ import Entity.Transaction;
 import Enum.TransactionType;
 import IO.Log;
 
+import java.awt.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -76,7 +77,8 @@ public class FinancialManager {
      */
     public void payRent(LocalDate date) {
 
-        Log.printColor(Log.RED_UNDERLINED, "RENT:");
+        // WAS UNDERLINED
+        Log.printColor(Color.RED, "RENT:");
 
         addTransaction(new Transaction(TransactionType.RENT, date, rent.negate()));
         Log.print("\tPaid rent of " + Log.currencyToString(rent));
@@ -89,7 +91,8 @@ public class FinancialManager {
      */
     public void paySalaries(LocalDate date, List<Employee> employees) {
 
-        Log.printColor(Log.RED_UNDERLINED, "SALARIES:");
+        // WAS UNDERLINED
+        Log.printColor(Color.RED, "SALARIES:");
 
         for(Employee item: employees) {
             addTransaction(new Transaction(TransactionType.SALARY, date, item.getSalary().negate()));
@@ -104,7 +107,8 @@ public class FinancialManager {
      *
      */
     public void financialSummary() {
-        Log.printColor(Log.WHITE_UNDERLINED, "FINANCIAL SUMMARY");
+        // WAS UNDERLINED
+        Log.printColor(Color.ORANGE, "FINANCIAL SUMMARY");
         Log.print("\tRevenues: " + Log.currencyToString(getTransactionsAmount(TransactionType.RESERVATION)));
         Log.print("\tRent: " + Log.currencyToString(getTransactionsAmount(TransactionType.RENT)));
         Log.print("\tSalaries: " + Log.currencyToString(getTransactionsAmount(TransactionType.SALARY)));

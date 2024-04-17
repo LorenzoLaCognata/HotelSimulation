@@ -8,6 +8,7 @@ import Enum.EmployeeRole;
 import Enum.InputType;
 import Entity.TimePeriod;
 
+import java.awt.*;
 import java.math.BigDecimal;
 import java.time.DayOfWeek;
 import java.util.ArrayList;
@@ -33,7 +34,8 @@ public class EmployeeManager {
      */
     public void defaultEmployee() {
 
-        Log.printColor(Log.WHITE_UNDERLINED, "EMPLOYEES");
+        // WAS UNDERLINED
+        Log.printColor(Color.ORANGE, "EMPLOYEES");
 
         Employee assistant = new Employee("Alex Goldner", EmployeeRole.ASSISTANT_GENERAL_MANAGER, new BigDecimal(2000));
         Log.print("\tMeet your new Assistant General Manager!");

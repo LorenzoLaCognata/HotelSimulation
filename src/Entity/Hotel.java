@@ -11,6 +11,7 @@ import Manager.EmployeeManager;
 import Manager.FinancialManager;
 import Manager.ReservationManager;
 
+import java.awt.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
@@ -60,7 +61,8 @@ public class Hotel {
         }
 
         setName(hotelName);
-        Log.printColor(Log.WHITE_UNDERLINED, "HOTEL");
+        // WAS UNDERLINED
+        Log.printColor(Color.ORANGE, "HOTEL");
         Log.print("\t" + name);
 
         int availableArea = 200;
@@ -134,12 +136,13 @@ public class Hotel {
 
         }
 
-        Log.printColor(Log.WHITE_UNDERLINED, "ROOMS");
+        // WAS UNDERLINED
+        Log.printColor(Color.ORANGE, "ROOMS");
         Log.print(reservationManager.roomsToString(reservationManager.getRooms()));
 
         employeeManager.defaultEmployee();
 
-        Log.printColor(Log.CYAN_BACKGROUND, "GAME DATE | " + gameDate);
+        Log.printColor(Color.CYAN, "GAME DATE | " + gameDate);
         Log.print("");
 
     }

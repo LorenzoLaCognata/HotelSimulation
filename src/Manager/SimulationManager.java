@@ -10,6 +10,7 @@ import IO.Log;
 import Menu.EmployeesMenu;
 import Menu.RoomsMenu;
 
+import java.awt.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -62,7 +63,8 @@ public class SimulationManager {
      */
     public void mainMenu() {
 
-        Log.printColor(Log.WHITE_UNDERLINED, "MAIN MENU");
+        // WAS UNDERLINED
+        Log.printColor(Color.ORANGE, "MAIN MENU");
         String mainMenuChoice = Input.askQuestion("", List.of("GUESTS", "ROOMS", "EMPLOYEES", "ADVANCE DATE", "QUIT"), InputType.SINGLE_CHOICE_TEXT);
 
         if (mainMenuChoice.equalsIgnoreCase("GUESTS")) {
@@ -89,7 +91,8 @@ public class SimulationManager {
      */
     private void guestsMenuChoice() {
 
-        Log.printColor(Log.WHITE_UNDERLINED, "GUESTS:");
+        // WAS UNDERLINED
+        Log.printColor(Color.ORANGE, "GUESTS:");
         Log.print(guestsToString());
 
         String roomsMenuChoice = Input.askQuestion("", List.of("RESERVATIONS", "CHECK-INS", "CHECK-OUTS", "BACK"), InputType.SINGLE_CHOICE_TEXT);
@@ -117,7 +120,8 @@ public class SimulationManager {
      */
     public void roomsMenuChoice() {
 
-        Log.printColor(Log.WHITE_UNDERLINED, "ROOMS:");
+        // WAS UNDERLINED
+        Log.printColor(Color.ORANGE, "ROOMS:");
         Log.print(hotel.reservationManager.roomsToString(hotel.reservationManager.getRooms()));
 
         String roomsMenuChoice = Input.askQuestion("", List.of("SET RATE", "SET TYPE", "SET SIZE", "BACK"), InputType.SINGLE_CHOICE_TEXT);
@@ -145,7 +149,8 @@ public class SimulationManager {
      */
     public void employeesMenuChoice() {
 
-        Log.printColor(Log.WHITE_UNDERLINED, "EMPLOYEES");
+        // WAS UNDERLINED
+        Log.printColor(Color.ORANGE, "EMPLOYEES");
         Log.print(hotel.employeeManager.employeesToString());
 
         String employeesMenuChoice = Input.askQuestion("", List.of("SHIFTS", "BACK"), InputType.SINGLE_CHOICE_TEXT);
@@ -170,7 +175,7 @@ public class SimulationManager {
 
             setGameDate(gameDate.plusDays(1));
             Log.print("--------------------------------------\n");
-            Log.printColor(Log.CYAN_BACKGROUND, "GAME DATE | " + gameDate + "\n");
+            Log.printColor(Color.CYAN, "GAME DATE | " + gameDate + "\n");
 
             if (gameDate.getDayOfMonth() == gameDate.lengthOfMonth()) {
                 hotel.financialManager.payRent(gameDate);
@@ -181,14 +186,16 @@ public class SimulationManager {
 
             hotel.reservationManager.generateCheckouts(gameDate);
 
-            Log.printColor(Log.WHITE_UNDERLINED, "ROOMS:");
+            // WAS UNDERLINED
+            Log.printColor(Color.ORANGE, "ROOMS:");
             Log.print(hotel.reservationManager.roomsToString(hotel.reservationManager.getRooms()));
 
             hotel.reservationManager.generateReservations(setupMode, gameDate, guests, hotel.financialManager);
 
             hotel.reservationManager.generateCheckins(gameDate);
 
-            Log.printColor(Log.WHITE_UNDERLINED, "ROOMS:");
+            // WAS UNDERLINED
+            Log.printColor(Color.ORANGE, "ROOMS:");
             Log.print(hotel.reservationManager.roomsToString(hotel.reservationManager.getRooms()));
 
             hotel.financialManager.financialSummary();
@@ -209,7 +216,7 @@ public class SimulationManager {
         Log.print("");
 
         setGameDate(gameDate.plusDays(1));
-        Log.printColor(Log.CYAN_BACKGROUND, "GAME DATE | " + gameDate);
+        Log.printColor(Color.CYAN, "GAME DATE | " + gameDate);
         Log.print("");
 
         if (gameDate.getDayOfMonth() == 1) {
@@ -242,7 +249,8 @@ public class SimulationManager {
         }
 
         if (setupMode == SetupMode.AUTOMATIC) {
-            Log.printColor(Log.WHITE_UNDERLINED, "GUESTS");
+            // WAS UNDERLINED
+            Log.printColor(Color.ORANGE, "GUESTS");
             Log.print(guestsToString());
         }
 
