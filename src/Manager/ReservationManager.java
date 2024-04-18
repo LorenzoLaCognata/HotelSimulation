@@ -68,7 +68,9 @@ public class ReservationManager {
      */
     public void checkinGuest(Reservation reservation) {
         reservation.setStatus(ReservationStatus.CHECKED_IN);
+        reservation.getGuest().setStatus(GuestStatus.CHECKED_IN);
         Log.printColor(Log.GREEN, "\tGuest (" + reservation.getGuest() + ") checked in to Room (" + reservation.getRoom() + ")");
+        Log.print("");
     }
 
     /**
@@ -77,7 +79,7 @@ public class ReservationManager {
      */
     public void checkoutGuest(Reservation reservation) {
         reservation.getRoom().setStatus(RoomStatus.FREE);
-        reservation.getGuest().setStatus((GuestStatus.STAYED));
+        reservation.getGuest().setStatus((GuestStatus.CHECKED_OUT));
         reservation.setStatus(ReservationStatus.CHECKED_OUT);
         Log.printColor(Log.RED, "\tGuest (" + reservation.getGuest() + ") checked out from Room (" + reservation.getRoom() + ")");
     }
@@ -139,7 +141,7 @@ public class ReservationManager {
      */
     public void reserveRoom(Room room, Guest guest, LocalDate startDate, LocalDate endDate, BigDecimal rate, FinancialManager financialManager) {
         room.setStatus(RoomStatus.RESERVED);
-        guest.setStatus(GuestStatus.STAYING);
+        guest.setStatus(GuestStatus.RESERVED);
         Reservation reservation = new Reservation(room, guest, startDate, endDate, rate);
         addReservation(reservation);
         financialManager.addTransaction(new Transaction(TransactionType.RESERVATION, startDate, reservation.getPrice()));

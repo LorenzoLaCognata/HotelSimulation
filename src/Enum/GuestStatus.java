@@ -11,13 +11,17 @@ public enum GuestStatus {
      */
     WAITING,
     /**
-     * Guest that has a hotel reservation that is in progress
+     * Guest that has a hotel reservation but has still to check-in
      */
-    STAYING,
+    RESERVED,
+    /**
+     * Guest that has a hotel reservation and has checked-in
+     */
+    CHECKED_IN,
     /**
      * Guest that has a hotel reservation that has been completed
      */
-    STAYED,
+    CHECKED_OUT,
     /**
      * Guest that decided not to make a reservation at the hotel
      */
@@ -28,6 +32,13 @@ public enum GuestStatus {
      */
     public static final ArrayList<GuestStatus> waitingStatus = new ArrayList<>() {
         {add(WAITING);}
+    };
+
+    /**
+     * List of status that correspond to guests with a reservation but not checked-in
+     */
+    public static final ArrayList<GuestStatus> reservedStatus = new ArrayList<>() {
+        {add(RESERVED);}
     };
 
 }
