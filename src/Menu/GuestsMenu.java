@@ -82,12 +82,12 @@ public class GuestsMenu {
 
                         if (r.getGuest().equals(g)) {
 
-                            if (r.getStatus() == ReservationStatus.CONFIRMED && r.getStartDate().isEqual(simulationManager.getGameDate())) {
+                            if (r.getStatus() == ReservationStatus.CONFIRMED && (r.getStartDate().isEqual(simulationManager.getGameDate()) || r.getStartDate().isBefore(simulationManager.getGameDate()))) {
                                 reservationManager.checkinGuest(r);
                             }
 
                             else {
-                                Log.print("Cannot check in this guest\n");
+                                Log.printColor(Log.RED, "Cannot check in this guest\n");
                             }
                         }
 
