@@ -139,8 +139,19 @@ public class SimulationManager {
         }
 
         else if (roomsMenuChoice.equalsIgnoreCase("CHECK-OUTS")) {
-            //guestsMenu.guestCheckOutsMenuChoice();
+
+            List<Guest> checkedInGuests = subsetGuests(Integer.MAX_VALUE, GuestStatus.checkedInStatus);
+
+            if (checkedInGuests.isEmpty()) {
+                Log.print("There are no guests to check-out\n");
+            }
+
+            else {
+                guestsMenu.guestCheckOutsMenuChoice(guests, this, hotel.reservationManager);
+            }
+
             guestsMenuChoice();
+
         }
 
     }

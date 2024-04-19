@@ -103,4 +103,42 @@ public class GuestsMenu {
 
     }
 
+    /**
+     *
+     */
+    public void guestCheckOutsMenuChoice(List<Guest> guests, SimulationManager simulationManager, ReservationManager reservationManager) {
+
+        String guestCheckOutsChoice = Input.askQuestion("Select a guest", simulationManager.subsetGuestOptions(Integer.MAX_VALUE, GuestStatus.checkedInStatus), InputType.SINGLE_CHOICE_NUMBER);
+
+        for (Guest g: guests) {
+
+            if (String.valueOf(g.getNumber()).equalsIgnoreCase(guestCheckOutsChoice)) {
+
+                if (g.getStatus() == GuestStatus.CHECKED_IN) {
+
+                    for (Reservation r: reservationManager.getReservations()) {
+
+                        if (r.getGuest().equals(g)) {
+
+                            if (r.getStatus() == ReservationStatus.CHECKED_IN && (r.getEndDate().isEqual(simulationManager.getGameDate()) || r.getEndDate().isAfter(simulationManager.getGameDate()))) {
+                                reservationManager.checkoutGuest(r);
+                            }
+
+                            else {
+                                Log.printColor(Log.RED, "Cannot check out this guest\n");
+                            }
+                        }
+
+                    }
+
+                }
+
+            }
+        }
+
+        Collections.sort(guests);
+        Collections.sort(reservationManager.getRooms());
+
+    }
+
 }
