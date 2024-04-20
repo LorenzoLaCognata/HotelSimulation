@@ -1,5 +1,7 @@
 package Enum;
 
+import java.util.ArrayList;
+
 /**
  * Status for a guest and his hotel reservation
  */
@@ -19,5 +21,13 @@ public enum GuestStatus {
     /**
      * Guest that decided not to make a reservation at the hotel
      */
-    LOST
+    LOST;
+
+    /**
+     * List of status that correspond to waiting guests
+     */
+    public static final ArrayList<GuestStatus> waitingStatus = new ArrayList<>() {
+        {add(WAITING);}
+    };
+
 }

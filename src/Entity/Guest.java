@@ -1,6 +1,7 @@
 package Entity;
 
 import Enum.GuestStatus;
+import org.jetbrains.annotations.NotNull;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
@@ -8,7 +9,7 @@ import java.time.temporal.ChronoUnit;
 /**
  * Possible guest of the hotel
  */
-public class Guest {
+public class Guest implements Comparable<Guest> {
 
     private final int number;
     private final int people;
@@ -31,10 +32,16 @@ public class Guest {
         guestCounter = guestCounter + 1;
     }
 
-    // Getter
+    /**
+     * Returns the guest identifier
+     * @return Identifier of the guest
+     */
+    public int getNumber() {
+        return number;
+    }
 
     /**
-     * Returns the number of people
+     * Returns the number of people staying with the guest
      * @return Number of people looking for an accomodation at the hotel
      */
     public int getPeople() {
@@ -73,6 +80,28 @@ public class Guest {
         return status;
     }
 
+    /**
+     * Calculate a number associated to the GuestStatus for sorting
+     * @return Number associated to the GuestStatus
+     */
+    public int getStatusNumber() {
+        if (status == GuestStatus.LOST) {
+            return 1;
+        }
+        else if (status == GuestStatus.STAYED) {
+            return 2;
+        }
+        else if (status == GuestStatus.STAYING) {
+            return 3;
+        }
+        else if (status == GuestStatus.WAITING) {
+            return 4;
+        }
+        else {
+            return 0;
+        }
+    }
+
     // Setter
 
     /**
@@ -97,6 +126,15 @@ public class Guest {
         }
 
         return "Guest " + number + " | "  + people + " " + peopleString + " | From " + startDate + " | To " + endDate + " | " + status;
+    }
+
+    @Override
+    public int compareTo(@NotNull Guest other) {
+
+        int thisNumber = getStatusNumber() * 1000000 + (int) getStartDate().toEpochDay();
+        int otherNumber = other.getStatusNumber() * 1000000 + (int) other.getStartDate().toEpochDay();
+        return Integer.compare(thisNumber, otherNumber);
+
     }
 
 }

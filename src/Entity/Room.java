@@ -125,6 +125,22 @@ public class Room implements Comparable<Room> {
 
     /**
      *
+     * @return
+     */
+    public int getStatusNumber() {
+        if (status == RoomStatus.RESERVED) {
+            return 1;
+        }
+        else if (status == RoomStatus.FREE) {
+            return 2;
+        }
+        else {
+            return 0;
+        }
+    }
+
+    /**
+     *
      * @param status
      */
     public void setStatus(RoomStatus status) {
@@ -233,8 +249,8 @@ public class Room implements Comparable<Room> {
     @Override
     public int compareTo(@NotNull Room other) {
 
-        int thisNumber = getSizeNumber()*100 + getTypeNumber()*10 + getNumber();
-        int otherNumber = other.getSizeNumber()*100 + other.getTypeNumber()*10 + other.getNumber();
+        int thisNumber = getStatusNumber()*1000 + getSizeNumber()*100 + getTypeNumber()*10 + getNumber();
+        int otherNumber = other.getStatusNumber()*1000 + other.getSizeNumber()*100 + other.getTypeNumber()*10 + other.getNumber();
         return Integer.compare(thisNumber, otherNumber);
 
     }
