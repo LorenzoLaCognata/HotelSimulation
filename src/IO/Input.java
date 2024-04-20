@@ -125,7 +125,7 @@ public class Input {
         while (!validAnswer) {
 
             if (answerCounter > 0) {
-                Log.printColor(Color.RED, "Error! Answer not valid!");
+                Log.print("Error! Answer not valid!", Color.RED);
             }
 
             Log.print(questionOptionsString(question, options, inputType));
@@ -180,7 +180,7 @@ public class Input {
         while (!validAnswer) {
 
             if (answerCounter > 0) {
-                Log.printColor(Color.RED, "Error! Answer not valid!");
+                Log.print("Error! Answer not valid!", Color.RED);
             }
 
             Log.print(question);
@@ -222,7 +222,7 @@ public class Input {
             while (!validAnswer) {
 
                 if (answerCounter > 0) {
-                    Log.printColor(Color.RED, "Error! Answer not valid!");
+                    Log.print("Error! Answer not valid!", Color.RED);
                 }
 
                 Log.print(question);

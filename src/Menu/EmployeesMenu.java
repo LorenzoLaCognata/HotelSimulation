@@ -6,6 +6,7 @@ import IO.Input;
 import IO.Log;
 import Manager.EmployeeManager;
 
+import javax.swing.text.StyleConstants;
 import java.awt.*;
 import java.util.List;
 
@@ -23,8 +24,7 @@ public class EmployeesMenu {
 
         for (Employee item: employeeManager.getEmployees()) {
             if (item.getName().equalsIgnoreCase(employeesMenuChoice)) {
-                // WAS UNDERLINED
-                Log.printColor(Color.ORANGE, "SHIFTS");
+                Log.print("SHIFTS",  Color.BLACK, Color.WHITE, StyleConstants.Bold, StyleConstants.Underline);
                 Log.print(item.toShiftsString());
 
                 String employeeShiftMenuChoice = Input.askQuestion("", List.of("SET SHIFT", "BACK"), InputType.SINGLE_CHOICE_TEXT);
@@ -34,8 +34,7 @@ public class EmployeesMenu {
 //                }
                 if (employeeShiftMenuChoice.equalsIgnoreCase("SET SHIFT")) {
                     employeeManager.setShift(item);
-                    // WAS UNDERLINED
-                    Log.printColor(Color.ORANGE, "SHIFTS");
+                    Log.print("SHIFTS",  Color.BLACK, Color.WHITE, StyleConstants.Bold, StyleConstants.Underline);
                     Log.print(item.toShiftsString());
                 }
 

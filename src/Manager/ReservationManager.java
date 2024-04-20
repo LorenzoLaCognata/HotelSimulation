@@ -14,6 +14,7 @@ import Enum.InputType;
 import Enum.TransactionType;
 import IO.Log;
 
+import javax.swing.text.StyleConstants;
 import java.awt.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -69,7 +70,7 @@ public class ReservationManager {
      */
     public void checkinGuest(Reservation reservation) {
         reservation.setStatus(ReservationStatus.CHECKED_IN);
-        Log.printColor(Color.GREEN, "\tGuest (" + reservation.getGuest() + ") checked in to Room (" + reservation.getRoom() + ")");
+        Log.print("\tGuest (" + reservation.getGuest() + ") checked in to Room (" + reservation.getRoom() + ")", Color.GREEN);
     }
 
     /**
@@ -80,7 +81,7 @@ public class ReservationManager {
         reservation.getRoom().setStatus(RoomStatus.FREE);
         reservation.getGuest().setStatus((GuestStatus.STAYED));
         reservation.setStatus(ReservationStatus.CHECKED_OUT);
-        Log.printColor(Color.RED, "\tGuest (" + reservation.getGuest() + ") checked out from Room (" + reservation.getRoom() + ")");
+        Log.print("\tGuest (" + reservation.getGuest() + ") checked out from Room (" + reservation.getRoom() + ")", Color.RED);
     }
 
     /**
@@ -89,8 +90,7 @@ public class ReservationManager {
      */
     public void generateCheckins(LocalDate gameDate) {
 
-        // WAS UNDERLINED
-        Log.printColor(Color.GREEN, "CHECK-INS:");
+        Log.print("CHECK-INS:",  Color.BLACK, Color.WHITE, StyleConstants.Bold, StyleConstants.Underline);
 
         int checkInsCount = 0;
 
@@ -102,7 +102,7 @@ public class ReservationManager {
         }
 
         if (checkInsCount == 0) {
-            Log.printColor(Color.GREEN, "\t-");
+            Log.print("\t-", Color.GREEN);
         }
         Log.print("");
 
@@ -114,8 +114,7 @@ public class ReservationManager {
      */
     public void generateCheckouts(LocalDate gameDate) {
 
-        // WAS UNDERLINED
-        Log.printColor(Color.RED, "CHECK-OUTS:");
+        Log.print("CHECK-OUTS:",  Color.BLACK, Color.WHITE, StyleConstants.Bold, StyleConstants.Underline);
 
         int checkOutsCount = 0;
         for(Reservation reservation: getReservations()) {
@@ -126,7 +125,7 @@ public class ReservationManager {
         }
 
         if (checkOutsCount == 0) {
-            Log.printColor(Color.RED, "\t-");
+            Log.print("\t-", Color.RED);
         }
         Log.print("");
 
@@ -154,8 +153,7 @@ public class ReservationManager {
     public void generateReservations(SetupMode setupMode, LocalDate gameDate, List<Guest> guests, FinancialManager financialManager) {
 
         if (setupMode == SetupMode.MANUAL) {
-            // WAS UNDERLINED
-            Log.printColor(Color.ORANGE, "GUESTS:");
+            Log.print("GUESTS:",  Color.BLACK, Color.WHITE, StyleConstants.Bold, StyleConstants.Underline);
         }
 
         for(Guest guest: guests) {
@@ -207,9 +205,8 @@ public class ReservationManager {
             }
         }
 
-        // WAS UNDERLINED
-        Log.printColor(Color.BLUE, "RESERVATIONS:");
-        Log.printColor(Color.BLUE, reservationsToString());
+        Log.print("RESERVATIONS:",  Color.BLACK, Color.WHITE, StyleConstants.Bold, StyleConstants.Underline);
+        Log.print(reservationsToString());
 
     }
 
@@ -313,8 +310,7 @@ public class ReservationManager {
      * @param gameDate
      */
     public void reservationSummary(LocalDate gameDate) {
-        // WAS UNDERLINED
-        Log.printColor(Color.ORANGE, "RESERVATION SUMMARY");
+        Log.print("RESERVATION SUMMARY",  Color.BLACK, Color.WHITE, StyleConstants.Bold, StyleConstants.Underline);
         Log.print("\tOccupancy: " + subsetRooms(0, RoomStatus.reservedStatus).size() + "/" + rooms.size() + " (" + subsetRooms(0, RoomStatus.reservedStatus).size() / rooms.size()+ "%)");
         Log.print("\tRevPAR: " + Log.currencyToString(reservationKPIs.revenuePerAvailableRoom(gameDate, reservations, rooms)));
         Log.print("\tADR: " + Log.currencyToString(reservationKPIs.averageDailyRate(gameDate, reservations)));

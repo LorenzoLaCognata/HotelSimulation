@@ -1,6 +1,10 @@
 package Manager;
 
 import javax.swing.*;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.Document;
+import javax.swing.text.SimpleAttributeSet;
+import javax.swing.text.StyleConstants;
 
 import IO.Input;
 import IO.Log;
@@ -33,5 +37,6 @@ public class Main {
         SimulationManager simulationManager = new SimulationManager();
 //        simulationManager.simulate(31);
         simulationManager.mainMenu();
+
     }
 }
