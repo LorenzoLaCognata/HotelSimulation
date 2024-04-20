@@ -10,6 +10,8 @@ import IO.Log;
 import Menu.EmployeesMenu;
 import Menu.RoomsMenu;
 
+import javax.swing.text.StyleConstants;
+import java.awt.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -62,7 +64,7 @@ public class SimulationManager {
      */
     public void mainMenu() {
 
-        Log.printColor(Log.WHITE_UNDERLINED, "MAIN MENU");
+        Log.print("MAIN MENU",  Color.BLACK, Color.WHITE, StyleConstants.Bold, StyleConstants.Underline);
         String mainMenuChoice = Input.askQuestion("", List.of("GUESTS", "ROOMS", "EMPLOYEES", "ADVANCE DATE", "QUIT"), InputType.SINGLE_CHOICE_TEXT);
 
         if (mainMenuChoice.equalsIgnoreCase("GUESTS")) {
@@ -89,7 +91,7 @@ public class SimulationManager {
      */
     private void guestsMenuChoice() {
 
-        Log.printColor(Log.WHITE_UNDERLINED, "GUESTS:");
+        Log.print("GUESTS:",  Color.BLACK, Color.WHITE, StyleConstants.Bold, StyleConstants.Underline);
         Log.print(guestsToString());
 
         String roomsMenuChoice = Input.askQuestion("", List.of("RESERVATIONS", "CHECK-INS", "CHECK-OUTS", "BACK"), InputType.SINGLE_CHOICE_TEXT);
@@ -117,7 +119,7 @@ public class SimulationManager {
      */
     public void roomsMenuChoice() {
 
-        Log.printColor(Log.WHITE_UNDERLINED, "ROOMS:");
+        Log.print("ROOMS:",  Color.BLACK, Color.WHITE, StyleConstants.Bold, StyleConstants.Underline);
         Log.print(hotel.reservationManager.roomsToString(hotel.reservationManager.getRooms()));
 
         String roomsMenuChoice = Input.askQuestion("", List.of("SET RATE", "SET TYPE", "SET SIZE", "BACK"), InputType.SINGLE_CHOICE_TEXT);
@@ -145,7 +147,7 @@ public class SimulationManager {
      */
     public void employeesMenuChoice() {
 
-        Log.printColor(Log.WHITE_UNDERLINED, "EMPLOYEES");
+        Log.print("EMPLOYEES",  Color.BLACK, Color.WHITE, StyleConstants.Bold, StyleConstants.Underline);
         Log.print(hotel.employeeManager.employeesToString());
 
         String employeesMenuChoice = Input.askQuestion("", List.of("SHIFTS", "BACK"), InputType.SINGLE_CHOICE_TEXT);
@@ -170,7 +172,7 @@ public class SimulationManager {
 
             setGameDate(gameDate.plusDays(1));
             Log.print("--------------------------------------\n");
-            Log.printColor(Log.CYAN_BACKGROUND, "GAME DATE | " + gameDate + "\n");
+            Log.print("GAME DATE | " + gameDate + "\n",  Color.WHITE, Color.BLACK, StyleConstants.Bold, new Object());
 
             if (gameDate.getDayOfMonth() == gameDate.lengthOfMonth()) {
                 hotel.financialManager.payRent(gameDate);
@@ -181,14 +183,14 @@ public class SimulationManager {
 
             hotel.reservationManager.generateCheckouts(gameDate);
 
-            Log.printColor(Log.WHITE_UNDERLINED, "ROOMS:");
+            Log.print("ROOMS:",  Color.BLACK, Color.WHITE, StyleConstants.Bold, StyleConstants.Underline);
             Log.print(hotel.reservationManager.roomsToString(hotel.reservationManager.getRooms()));
 
             hotel.reservationManager.generateReservations(setupMode, gameDate, guests, hotel.financialManager);
 
             hotel.reservationManager.generateCheckins(gameDate);
 
-            Log.printColor(Log.WHITE_UNDERLINED, "ROOMS:");
+            Log.print("ROOMS:",  Color.BLACK, Color.WHITE, StyleConstants.Bold, StyleConstants.Underline);
             Log.print(hotel.reservationManager.roomsToString(hotel.reservationManager.getRooms()));
 
             hotel.financialManager.financialSummary();
@@ -209,7 +211,7 @@ public class SimulationManager {
         Log.print("");
 
         setGameDate(gameDate.plusDays(1));
-        Log.printColor(Log.CYAN_BACKGROUND, "GAME DATE | " + gameDate);
+        Log.print("GAME DATE | " + gameDate,  Color.WHITE, Color.BLACK, StyleConstants.Bold, new Object());
         Log.print("");
 
         if (gameDate.getDayOfMonth() == 1) {
@@ -242,7 +244,7 @@ public class SimulationManager {
         }
 
         if (setupMode == SetupMode.AUTOMATIC) {
-            Log.printColor(Log.WHITE_UNDERLINED, "GUESTS");
+            Log.print("GUESTS",  Color.BLACK, Color.WHITE, StyleConstants.Bold, StyleConstants.Underline);
             Log.print(guestsToString());
         }
 
@@ -258,7 +260,12 @@ public class SimulationManager {
             }
         }
 
-        return s;
+        if (!s.isEmpty()) {
+            return s;
+        }
+        else {
+            return "\t-\n";
+        }
 
     }
 
