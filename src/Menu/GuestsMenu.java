@@ -87,7 +87,7 @@ public class GuestsMenu {
                             }
 
                             else {
-                                Log.printColor(Log.RED, "Cannot check in this guest\n");
+                                Log.print("Cannot check in this guest\n");
                             }
                         }
 
@@ -125,7 +125,7 @@ public class GuestsMenu {
                             }
 
                             else {
-                                Log.printColor(Log.RED, "Cannot check out this guest\n");
+                                Log.print("Cannot check out this guest\n");
                             }
                         }
 

@@ -71,7 +71,7 @@ public class ReservationManager {
     public void checkinGuest(Reservation reservation) {
         reservation.setStatus(ReservationStatus.CHECKED_IN);
         reservation.getGuest().setStatus(GuestStatus.CHECKED_IN);
-        Log.printColor(Log.GREEN, "\tGuest (" + reservation.getGuest() + ") checked in to Room (" + reservation.getRoom() + ")");
+        Log.print("\tGuest (" + reservation.getGuest() + ") checked in to Room (" + reservation.getRoom() + ")");
         Log.print("");
     }
 
@@ -83,7 +83,7 @@ public class ReservationManager {
         reservation.getRoom().setStatus(RoomStatus.FREE);
         reservation.getGuest().setStatus((GuestStatus.CHECKED_OUT));
         reservation.setStatus(ReservationStatus.CHECKED_OUT);
-        Log.print("\tGuest (" + reservation.getGuest() + ") checked out from Room (" + reservation.getRoom() + ")", Color.RED);
+        Log.print("\tGuest (" + reservation.getGuest() + ") checked out from Room (" + reservation.getRoom() + ")");
     }
 
     /**
@@ -104,7 +104,7 @@ public class ReservationManager {
         }
 
         if (checkInsCount == 0) {
-            Log.print("\t-", Color.GREEN);
+            Log.print("\t-");
         }
         Log.print("");
 
@@ -127,7 +127,7 @@ public class ReservationManager {
         }
 
         if (checkOutsCount == 0) {
-            Log.print("\t-", Color.RED);
+            Log.print("\t-");
         }
         Log.print("");
 
