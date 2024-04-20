@@ -88,14 +88,17 @@ public class Guest implements Comparable<Guest> {
         if (status == GuestStatus.LOST) {
             return 1;
         }
-        else if (status == GuestStatus.STAYED) {
+        else if (status == GuestStatus.CHECKED_OUT) {
             return 2;
         }
-        else if (status == GuestStatus.STAYING) {
+        else if (status == GuestStatus.CHECKED_IN) {
             return 3;
         }
-        else if (status == GuestStatus.WAITING) {
+        else if (status == GuestStatus.RESERVED) {
             return 4;
+        }
+        else if (status == GuestStatus.WAITING) {
+            return 5;
         }
         else {
             return 0;

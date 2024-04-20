@@ -2,7 +2,6 @@ package Manager;
 
 import Entity.Guest;
 import Entity.Hotel;
-import Entity.Room;
 import Enum.GuestStatus;
 import Enum.InputType;
 import Enum.SetupMode;
@@ -126,8 +125,19 @@ public class SimulationManager {
         }
 
         else if (roomsMenuChoice.equalsIgnoreCase("CHECK-INS")) {
-            //guestsMenu.guestCheckInsMenuChoice();
+
+            List<Guest> stayingGuests = subsetGuests(Integer.MAX_VALUE, GuestStatus.reservedStatus);
+
+            if (stayingGuests.isEmpty()) {
+                Log.print("There are no guests to check-in\n");
+            }
+
+            else {
+                guestsMenu.guestCheckInsMenuChoice(guests, this, hotel.reservationManager);
+            }
+
             guestsMenuChoice();
+
         }
 
         else if (roomsMenuChoice.equalsIgnoreCase("CHECK-OUTS")) {
@@ -261,8 +271,9 @@ public class SimulationManager {
                 }
 
                 int people = 1 + (int) Math.round((gaussian + 1.0) * 1.5);
-                int nights = random.nextInt(1, 7);
-                guests.add(new Guest(people, gameDate, gameDate.plusDays(nights)));
+                int startDay = random.nextInt(0, 3);
+                int endDay = random.nextInt(1, 8);
+                guests.add(new Guest(people, gameDate.plusDays(startDay), gameDate.plusDays(endDay)));
             }
         }
 
@@ -334,7 +345,7 @@ public class SimulationManager {
         String s = "";
 
         for(Guest item: guests) {
-            if (item.getStatus() == GuestStatus.WAITING || item.getStatus() == GuestStatus.STAYING) {
+            if (item.getStatus() == GuestStatus.WAITING || item.getStatus() == GuestStatus.RESERVED || item.getStatus() == GuestStatus.CHECKED_IN) {
                 s = s + "\t" + item + "\n";
             }
         }

@@ -1,8 +1,10 @@
 package Menu;
 
+import Entity.Reservation;
 import Enum.InputType;
 import Enum.RoomStatus;
 import Enum.GuestStatus;
+import Enum.ReservationStatus;
 import Entity.Room;
 import Entity.Guest;
 import IO.Input;
@@ -47,7 +49,45 @@ public class GuestsMenu {
                         for (Room room : freeRooms) {
                             if (!roomFound && room.getStatus() == RoomStatus.FREE && room.getNumber() == roomNumber) {
                                 roomFound = true;
-                                reservationManager.reserveRoom(room, item, simulationManager.getGameDate(), simulationManager.getGameDate().plusDays(item.getNights()), room.getRate(), financialManager);
+                                reservationManager.reserveRoom(room, item, item.getStartDate(), item.getEndDate(), room.getRate(), financialManager);
+                            }
+                        }
+
+                    }
+
+                }
+
+            }
+        }
+
+        Collections.sort(guests);
+        Collections.sort(reservationManager.getRooms());
+
+    }
+
+    /**
+     *
+     */
+    public void guestCheckInsMenuChoice(List<Guest> guests, SimulationManager simulationManager, ReservationManager reservationManager) {
+
+        String guestCheckInsChoice = Input.askQuestion("Select a guest", simulationManager.subsetGuestOptions(Integer.MAX_VALUE, GuestStatus.reservedStatus), InputType.SINGLE_CHOICE_NUMBER);
+
+        for (Guest g: guests) {
+
+            if (String.valueOf(g.getNumber()).equalsIgnoreCase(guestCheckInsChoice)) {
+
+                if (g.getStatus() == GuestStatus.RESERVED) {
+
+                    for (Reservation r: reservationManager.getReservations()) {
+
+                        if (r.getGuest().equals(g)) {
+
+                            if (r.getStatus() == ReservationStatus.CONFIRMED && (r.getStartDate().isEqual(simulationManager.getGameDate()) || r.getStartDate().isBefore(simulationManager.getGameDate()))) {
+                                reservationManager.checkinGuest(r);
+                            }
+
+                            else {
+                                Log.printColor(Log.RED, "Cannot check in this guest\n");
                             }
                         }
 
