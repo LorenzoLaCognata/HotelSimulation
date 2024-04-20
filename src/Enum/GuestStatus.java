@@ -41,4 +41,11 @@ public enum GuestStatus {
         {add(RESERVED);}
     };
 
+    /**
+     * List of status that correspond to guests that checked-in
+     */
+    public static final ArrayList<GuestStatus> checkedInStatus = new ArrayList<>() {
+        {add(CHECKED_IN);}
+    };
+
 }
